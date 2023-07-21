@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
+import { UilUser } from '@iconscout/react-unicons'
 
 function PopoverInfo() {
   useEffect(() => {
-    // Activa los popovers en los elementos con clase 'example-popover' al montar el componente
+    // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
     const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
     popoverTriggerList.map(function (popoverTriggerEl) {
       return new window.bootstrap.Popover(popoverTriggerEl, {
@@ -19,7 +20,7 @@ function PopoverInfo() {
     data-bs-trigger="hover focus"
     data-bs-content="Institución"
     >
-        <span><i className="bi bi-info-circle"></i></span>
+      <UilUser size="40" color="#C9B7C7"/>
     </button>
   )
 }

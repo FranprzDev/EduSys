@@ -17,9 +17,9 @@ function PopoverInfo() {
     data-bs-toggle="popover" 
     data-bs-placement="bottom" 
     data-bs-trigger="hover focus"
-    data-bs-content="$Institucion$ $Telefono$ $Mail$"
+    data-bs-content="Institución"
     >
-        PopOver - Información
+        <span><i className="bi bi-info-circle"></i></span>
     </button>
   )
 }

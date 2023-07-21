@@ -18,7 +18,8 @@ function PopoverCuenta() {
     data-bs-placement="bottom" 
     data-bs-trigger="hover focus"
     data-bs-content="Estás ahora mismo en una cuenta de administrador!">
-        PopOver - Cuenta
+      {/* <i class="bi bi-person-lock"></i> */}
+        <span><i className="bi bi-person"></i></span>
     </button>
   )
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import PopoverInfo from './Popovers/PopoverInfo'
 import PopoverCuenta from './Popovers/PopoverCuenta'
+import '../styles/globalStyle.css'
 
 function Navbar() {
   // {

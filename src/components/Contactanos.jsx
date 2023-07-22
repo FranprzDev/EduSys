@@ -1,6 +1,7 @@
 import React , {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import ContactanosModal from './modals/ContactanosModal'
+import { UilArrowRight } from '@iconscout/react-unicons'
 
 
 function Contactanos() {
@@ -33,7 +34,7 @@ function Contactanos() {
                         <textarea className="form-control rounded-4 h-100" placeholder="Escribe un mensaje" style={{ background: "#c9b7c7 ", boxShadow: "inset 0 2px 3px #4d3147" }} rows="4" required ></textarea>
                     </div>
                     <div className='text-center mt-3'>
-                        <button className='col-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }} onClick={handleShow}>Enviar</button>
+                        <button className='col-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }} onClick={handleShow} >Enviar <UilArrowRight/></button>
                     </div>
                 </form>
             </div>

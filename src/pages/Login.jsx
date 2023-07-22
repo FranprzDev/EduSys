@@ -15,7 +15,7 @@ const Login = () => {
 
                   <label htmlFor="email" className="label-custom">Email</label>
                   <input type="email" className="form-control input-custom rounded-pill textarea" id="email" name="email"
-                    placeholder="nombre@ejemplo.com" required />
+                    placeholder="nombre@ejemplo.com" required style={{ background: "#c9b7c7", boxShadow: "inset 0 2px 3px #4d3147" }} />
 
                 </div>
                 <div className="mb-3 mx-3">

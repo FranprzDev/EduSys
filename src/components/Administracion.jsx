@@ -2,9 +2,14 @@ import React ,{useState} from 'react'
 import Conejo from '../assets/images/Admin-Conejo.png'
 import { UilCog , UilUserSquare , UilEdit} from '@iconscout/react-unicons'
 import ActualizarDatos from './modals/ActualizarDatos';
+import ActualizarContraseña from './modals/ActualizarContraseña';
 
 function Administracion() {
     const [show, setShow] = useState(false);
+    const [showPass, setShowPass] = useState(false);
+
+    const handleClosePass = () => setShowPass(false);
+    const handleShowPass = () => setShowPass(true);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -44,12 +49,13 @@ function Administracion() {
                     </div>
                     <div className="col-md-6 col-lg-8 mx-auto">
                         <button className='col-12 btn text-white rounded-4 ' onClick={handleShow} style={{ background: "#4d3147 " }}>Actualizar Datos <UilCog/> </button>
-                        <button className='col-12 btn text-white rounded-4 my-3' style={{ background: "#4d3147 " }}>Cambiar Contraseña <UilEdit/></button>
+                        <button className='col-12 btn text-white rounded-4 my-3' onClick={handleShowPass} style={{ background: "#4d3147 " }}>Cambiar Contraseña <UilEdit/></button>
                         <button className='col-12 btn text-white rounded-4 ' style={{ background: "#4d3147 " }}>Pagina de Alumnos <UilUserSquare/></button>
                     </div>
                 </div>
             </div>
             <ActualizarDatos show={show} handleClose={handleClose}/>
+            <ActualizarContraseña showPass={showPass} handleClosePass={handleClosePass} />
         </>
     )
 }

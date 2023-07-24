@@ -2,6 +2,7 @@ import React from 'react'
 import PopoverInfo from './Popovers/PopoverInfo'
 import PopoverCuenta from './Popovers/PopoverCuenta'
 import '../styles/globalStyle.css'
+import Logo from '../assets/images/Logo.png'
 
 function Navbar() {
   // {
@@ -12,11 +13,10 @@ function Navbar() {
 
   return (
     <>
-      <div>Navbar</div>
       <PopoverCuenta/>
       <PopoverInfo/>
-    </>
-  )
+      </>
+  ) 
 }
 
 export default Navbar

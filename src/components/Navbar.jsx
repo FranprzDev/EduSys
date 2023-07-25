@@ -13,13 +13,13 @@ function Navbar() {
 
   return (
     <>
-      <div>
+    
+      <div className='d-flex justify-content-evenly align-items-center'>
         <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
-        <button className=''></button>
-        <UilInfoCircle size="40" color="#C9B7C7" />
+        <button className='btn text-white rounded-4 h-50 ' style={{ background: "#4d3147 " }}>Iniciar Sesión</button>
       </div>
-      <PopoverCuenta />
-      <PopoverInfo />
+      { /* <PopoverCuenta />
+      <PopoverInfo />*/ }
     </>
   )
 }

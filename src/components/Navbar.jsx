@@ -13,10 +13,19 @@ function Navbar() {
 
   return (
     <>
-    
-      <div className='d-flex justify-content-evenly align-items-center'>
-        <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
-        <button className='btn text-white rounded-4 h-50 ' style={{ background: "#4d3147 " }}>Iniciar Sesión</button>
+
+      <div className='container'>
+        <div className='row'>
+          <div className='col'>
+            <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
+
+          </div>
+          <div className='col d-flex justify-content-end align-items-center'>
+            <button className='btn text-white rounded-4 h-50 ' style={{ background: "#4d3147 " }}>Iniciar Sesión</button>
+
+          </div>
+        </div>
+
       </div>
       { /* <PopoverCuenta />
       <PopoverInfo />*/ }

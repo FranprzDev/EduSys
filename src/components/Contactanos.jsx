@@ -1,9 +1,20 @@
-import React from 'react'
+import React , {useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
+import ContactanosModal from './modals/ContactanosModal'
+import { UilArrowRight } from '@iconscout/react-unicons'
 
 
 function Contactanos() {
+    const [show, setShow] = useState(false);
+
+    
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
+
+        <>
         <div className="container row mx-auto flex-md-row-reverse">
             <div className="col-lg-6 d-flex justify-content-center align-items-center mt-3 mt-lg-0">
                 <div className='text-center'>
@@ -23,12 +34,15 @@ function Contactanos() {
                         <textarea className="form-control rounded-4 h-100" placeholder="Escribe un mensaje" style={{ background: "#c9b7c7 ", boxShadow: "inset 0 2px 3px #4d3147" }} rows="4" required ></textarea>
                     </div>
                     <div className='text-center mt-3'>
-                        <button className='col-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }}>Enviar</button>
+                        <button className='col-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }} onClick={handleShow} >Enviar <UilArrowRight/></button>
                     </div>
                 </form>
             </div>
 
         </div>
+
+        <ContactanosModal show={show} handleClose={handleClose}/>
+        </>
     )
 }
 

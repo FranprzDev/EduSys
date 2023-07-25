@@ -9,7 +9,7 @@ function Footer() {
     return (
         <>
 
-            <footer className='d-flex justify-content-center '>
+            <footer className='d-flex justify-content-center'>
                 <div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 container '>
 
                     <div className="col pt-3 text-lg-start text-center">

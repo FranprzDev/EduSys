@@ -69,7 +69,7 @@ const Login = () => {
                   </div>
                   <div className="text-center">
                     <button className="btn btn-secondary btn-custom my-2 rounded-4" type="submit" id="submit-button" style={{ background: "#4d3147 " }} >Enviar
-                      < UilArrowRight size="30" color="#C9B7C7" />
+                    < UilArrowRight size="30" color="#C9B7C7" />
 
                     </button >
 

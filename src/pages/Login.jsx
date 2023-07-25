@@ -6,14 +6,15 @@ import { UilArrowRight } from '@iconscout/react-unicons'
 
 const Login = () => {
 const[usuario, setUsurio] = useState("")
-const [contraseña, setContraseña] = useState("")
+const [contrasenia, setContrasenia] = useState("")
 
 
   return (
     <>
-      <div class="container-fluid mt-5 d-flex">
-        <div class="row">
-          <div class="col-sm-4">
+
+      <div className="container ">
+        <div className="row justify-content-end">
+        <div class="col-sm-5">
             <figure className='w-65 h-100 rounded-circle mx-auto overflow-hidden'
               style={{
                 background: '#c9b7c7',
@@ -33,11 +34,6 @@ const [contraseña, setContraseña] = useState("")
             </figure>
 
           </div>
-        </div>
-      </div>
-
-      <div className="container ">
-        <div className="row justify-content-end">
           <div className="col-md-6">
             <div className="form">
 
@@ -64,8 +60,8 @@ const [contraseña, setContraseña] = useState("")
                     <label htmlFor="password" className="label-custom">Contraseña</label>
                     <input type="password" className="form-control input-custom rounded-pill" id="password" name="password"
                       placeholder="Contraseña" required style={{ background: "#c9b7c7", boxShadow: "inset 0 2px 3px #4d3147" }}
-                      value={contraseña}
-                      onChange={e => setContraseña(e.target.value)}
+                      value={contrasenia}
+                      onChange={e => setContrasenia(e.target.value)}
                     />
 
                   </div>

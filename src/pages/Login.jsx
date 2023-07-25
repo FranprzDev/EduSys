@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import girl from '../assets/images/girl-cute-iniciar-sesion.jpg';
 import { UilArrowRight } from '@iconscout/react-unicons'
 
 
 
 const Login = () => {
+const[usuario, setUsurio] = useState("")
+const [contraseña, setContraseña] = useState("")
+
+
   return (
     <>
       <div class="container-fluid mt-5 d-flex">
@@ -47,9 +51,11 @@ const Login = () => {
                 <form id="login-form" method="POST">
                   <div className="mb-3 mx-3">
 
-                    <label htmlFor="email" className="label-custom">Email</label>
+                    <label htmlFor="email" className="label-custom">Email/Usuario</label>
                     <input type="email" className="form-control input-custom rounded-pill textarea" id="email" name="email"
-                      placeholder="nombre@ejemplo.com" required style={{ background: "#c9b7c7", boxShadow: "inset 0 2px 3px #4d3147" }}
+                      placeholder="nombre@ejemplo.com / Nombre Usuario" required style={{ background: "#c9b7c7", boxShadow: "inset 0 2px 3px #4d3147" }}
+                      value={usuario}
+                      onChange={e => setUsurio(e.target.value)}
                     />
 
                   </div>
@@ -58,6 +64,8 @@ const Login = () => {
                     <label htmlFor="password" className="label-custom">Contraseña</label>
                     <input type="password" className="form-control input-custom rounded-pill" id="password" name="password"
                       placeholder="Contraseña" required style={{ background: "#c9b7c7", boxShadow: "inset 0 2px 3px #4d3147" }}
+                      value={contraseña}
+                      onChange={e => setContraseña(e.target.value)}
                     />
 
                   </div>
@@ -68,7 +76,7 @@ const Login = () => {
                     </label>
                   </div>
                   <div className="text-center">
-                    <button className="btn btn-secondary btn-custom my-2 rounded-4" type="submit" id="submit-button" style={{ background: "#4d3147 " }} >Enviar
+                    <button className="btn btn-secondary btn-custom my-2 rounded-4" type="submit" id="submit-button" style={{ background: "#4d3147 " }} >Iniciar Sesión
                     < UilArrowRight size="30" color="#C9B7C7" />
 
                     </button >

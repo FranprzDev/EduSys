@@ -1,23 +1,22 @@
-import Navbar from './components/Navbar.jsx'
+import React from "react"
+import { BrowserRouter, Routes , Route } from "react-router-dom"
+import Administracion from "./pages/Administrador"
+import Home from "./pages/Home"
+import Alumnos from "./pages/Alumnos"
 import Footer from './components/Footer'
-import Login from './pages/Login.jsx'
-import NavAdm from './components/NavError.jsx'
-import NavError from './components/NavError.jsx'
-// También dejo comentada las rutas que no se utilizarán
-// import Error from './pages/Error.jsx'
-// import Contactanos from './components/Contactanos.jsx'
 
 function App() {
 
   return (
     <>
-    <NavError/>
-    {/* Ojo aquí dejo comentado las cosas para probarlas, pero además de eso aún falta utilziar REACT-ROUTER para poder dejarlo bien */}
-      {/* <Navbar/>     */}
-      {/* <Contactanos/> */}
-      {/* <Error/> */}
-      <Login/>
-      
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="administracion" element={<Administracion/>}/>
+          <Route path="alumnos" element={<Alumnos/>}/>
+          <Route path="*" element={<Error/>}/>
+        </Routes>
+      </BrowserRouter>
       <Footer/>
     </>
     

@@ -31,7 +31,7 @@ function ContactanosModal({ show, handleClose }) {
                                     </figure>
                                 </div>
                                 <h4 className="text-center m-3 col-lg-8 mx-auto">¡Tu mensaje fue enviado correctamente!</h4>
-                                <p className='text-center col-6 mx-auto'>En breve un Administrador se contactara contigo por Mail</p>
+                                <p className='text-center col-6 mx-auto'>En breve nos concataremos por mail.</p>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn text-white rounded-4" style={{ background: "#4d3147 " }} onClick={handleClose}>Cerrar <UilTimes className="ms-2" /></button>

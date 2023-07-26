@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import NavBarAdministracion from '../components/Navbars/NavBarAdministracion'
+import RellenarCampos from '../components/modals/RellnarCampos';
 
 function Alumnos() {
+
   return (
-    <div>Alumnos</div>
-  )
+    <>
+      <NavBarAdministracion/>
+    </>
+    )
 }
 
 export default Alumnos

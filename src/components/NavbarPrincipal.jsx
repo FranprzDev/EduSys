@@ -3,34 +3,36 @@ import PopoverInfo from './Popovers/PopoverInfo'
 import PopoverCuenta from './Popovers/PopoverCuenta'
 import '../styles/globalStyle.css'
 import 'bootstrap/dist/css/bootstrap.css'
+import { UilHome } from '@iconscout/react-unicons'
+
 
 function NavbarPrincipal() {
-  // {
+    // {
 
-  //   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
-  //   const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
-  // }
+    //   const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    //   const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    // }
 
-  return (
-    <>
+    return (
+        <>
 
-      <div className='container'>
-        <div className='row'>
-          <div className='col'>
-            <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
+            <div className='container'>
+                <div className='row'>
+                    <div className='col'>
+                        <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
 
-          </div>
-          <div className='col d-flex justify-content-end align-items-center'>
-            <button className='btn text-white rounded-4 h-50 ' style={{ background: "#4d3147 " }}>Iniciar Sesión</button>
+                    </div>
+                    <div className='col d-flex justify-content-end align-items-center'>
+                        <UilHome size="50" color="#c9b7c7" />
 
-          </div>
-        </div>
+                    </div>
+                </div>
 
-      </div>
-      { /* <PopoverCuenta />
+            </div>
+            { /* <PopoverCuenta />
       <PopoverInfo />*/ }
-    </>
-  )
+        </>
+    )
 }
 
 export default NavbarPrincipal

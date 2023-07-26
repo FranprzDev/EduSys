@@ -26,8 +26,8 @@ function CrearAlumno() {
                     </figure>
 
                 </div>
-                <div className="col-lg-6 mx-auto">
-                    <div >
+                <div className="col-lg-6 mx-auto d-flex align-items-center">
+                    <div className=''>
                         <h3 className='text-center' style={{ color: "#866a80" }}>¡Puedes crear los alumnos que necesites!</h3>                   
                         
                     <div className='text-center mt-3'>

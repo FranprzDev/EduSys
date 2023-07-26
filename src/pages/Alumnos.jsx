@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
 import NavBarAdministracion from '../components/Navbars/NavBarAdministracion'
-import RellenarCampos from '../components/modals/RellnarCampos';
-import React from 'react'
 import CrearAlumno from '../components/CrearAlumno'
+import TablaCrearAlumno from '../components/tablaCrearAlumno';
 
 function Alumnos() {
 
@@ -10,6 +8,7 @@ function Alumnos() {
     <>
       <NavBarAdministracion/>
       <CrearAlumno/>
+      <TablaCrearAlumno/>
     </>
     )
 }

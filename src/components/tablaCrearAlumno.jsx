@@ -1,10 +1,10 @@
 import React from 'react'
 
-function tablaCrearAlumno() {
+function TablaCrearAlumno() {
   return (
     <>
     </>
   )
 }
 
-export default tablaCrearAlumno
+export default TablaCrearAlumno

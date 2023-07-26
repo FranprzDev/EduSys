@@ -50,7 +50,7 @@ function Administracion() {
                     <div className="col-md-6 col-lg-8 mx-auto">
                         <button className='col-12 btn text-white rounded-4 ' onClick={handleShow} style={{ background: "#4d3147 " }}>Actualizar Datos <UilCog/> </button>
                         <button className='col-12 btn text-white rounded-4 my-3' onClick={handleShowPass} style={{ background: "#4d3147 " }}>Cambiar Contraseña <UilEdit/></button>
-                        <button className='col-12 btn text-white rounded-4 ' style={{ background: "#4d3147 " }}>Pagina de Alumnos <UilUserSquare/></button>
+                        <button className='col-12 btn text-white rounded-4 ' style={{ background: "#4d3147 " }} href="" >Pagina de Alumnos <UilUserSquare/></button>
                     </div>
                 </div>
             </div>

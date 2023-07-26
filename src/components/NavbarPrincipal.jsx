@@ -24,7 +24,6 @@ function NavbarPrincipal() {
                     </div>
                     <div className='col d-flex justify-content-end align-items-center'>
                         <UilHome size="50" color="#c9b7c7" />
-
                     </div>
                 </div>
 

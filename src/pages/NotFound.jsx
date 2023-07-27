@@ -1,7 +1,8 @@
 import React from 'react'
 import NavError from '../components/Navbars/NavError'
+import conejo from "../assets/images/404-conejo.jpeg"
 
-function Error({ mensajeError = "" }) {
+function NotFound({ mensajeError = "" }) {
   return (
     <>
       <NavError/>
@@ -9,7 +10,7 @@ function Error({ mensajeError = "" }) {
         <div className="row">
           <div className="d-flex flex-column justify-content-center align-items-center col min-vh-100">
             <h1>{mensajeError}</h1>
-            <img src="src\assets\images\404-conejo.jpeg" className="img-fluid rounded-5" alt="Error-404-Funny-Bunny" />
+            <img src={conejo} className="img-fluid rounded-5" alt="Error-404-Funny-Bunny" />
           </div>
         </div>
       </div>
@@ -17,4 +18,4 @@ function Error({ mensajeError = "" }) {
   )
 }
 
-export default Error
+export default NotFound

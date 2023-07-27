@@ -1,7 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
+import JwtContext from "../JwtContext";
+
 import { UilTimesCircle } from '@iconscout/react-unicons'
+import { useNavigate } from 'react-router-dom';
 
 function PopoverSalir() {
+  const { destroySession } = useContext(JwtContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
     const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
@@ -13,9 +19,10 @@ function PopoverSalir() {
   }, []);
 
   const handleExitAccount = () => {
-    window.location.href = "/"
-    // + toda la lógica de salida (backend)
+    destroySession()
+    navigate('/login')
   }
+
   return (
     <button className='btn btn-outline text-gray popoverAdmin' 
     data-bs-container="body" 

@@ -4,12 +4,14 @@ import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
 import { UilArrowRight } from "@iconscout/react-unicons";
 import DatosIncorrectos from "./modals/DatosIncorrectos";
 import jwtDecode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 // funciona , pero tengo que usar context-api para que sea mejor.
 
 function LoginPage() {
-  const { jwt, setJwt } = useContext(JwtContext);
+  const { setJwt } = useContext(JwtContext);
 
   const [mail, setMail] = useState("");
+  const navigate = useNavigate();
   const [contrasenia, setContrasenia] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,30 +37,60 @@ function LoginPage() {
       method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: 'follow'
     };
   
     try {
       const response = await fetch("http://localhost:8000/auth/login", requestOptions);
-      const result = await response.text();
-      if(response.status === 200) { 
-        const decodedToken = jwtDecode(result);
-        setJwt({
-          ...jwt,
-          email: decodedToken.email,
-          jwt: result,
-        });
-        localStorage.setItem("token", value);
 
-        window.location.href = "/administracion"
-      }else {
-        setShow(true);
-        const mensajeServidor = JSON.parse(result)["message"];
-        setErrorMessage(mensajeServidor ?? "activamelopapá");
+      // console.log(response)
+      if(response.status >= 400){
+        throw new Error("test")
       }
-    } catch (error) {
-        setShow(true);
-        setErrorMessage(result);
+
+      const result = await response.json();
+      // console.log(result)
+
+      const decodedToken = await jwtDecode(result.access_token);
+      // console.log(decodedToken)
+
+      setJwt({
+        mail: decodedToken.mail,
+        token: result.access_token,
+        // agregar mas datos después
+      });
+
+      localStorage.setItem("token", result.access_token);
+
+      navigate("/auth/")
+
+
+      // if(response.status == 200){
+      //   const result = await response.text();
+
+      //   const decodedToken = await jwtDecode(result);
+        
+        
+      //   setJwt({
+      //     ...jwt,
+      //     email: decodedToken.email,
+      //     jwt: result,
+      //   });
+      //   localStorage.setItem("token", jwt);
+  
+      //   window.location.href = "/administracion"
+      // }else{
+      //   setShow(true);
+      //   const mensajeServidor = JSON.parse(error)["message"];
+      //   setErrorMessage(mensajeServidor ?? "activamelopapá");
+      // }
+      }
+    catch (error) {
+      // setShow(true);
+      // setErrorMessage(error ?? "activamelopapá");
+
+      setShow(true);
+      const mensajeServidor = JSON.parse(error)["message"];
+      setErrorMessage(mensajeServidor ?? "activamelopapá");
       }
   }
   
@@ -119,9 +151,14 @@ function LoginPage() {
                       style={{
                         background: "#c9b7c7",
                         boxShadow: "inset 0 2px 3px #4d3147",
+                        border: mail.length >= 40 ? "2px solid red" : undefined,
                       }}
-
                     />
+                    {
+                      mail.length == 40 && (
+                        <p className="text-danger">La cantidad máxima de caracteres es 40</p>
+                      ) 
+                    } 
                   </div>
                   <div className="mb-3 mx-3">
                     <label htmlFor="password" className="label-custom">

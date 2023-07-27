@@ -1,12 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import JwtContext from "./JwtContext";
 import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
 import { UilArrowRight } from "@iconscout/react-unicons";
+import DatosIncorrectos from "./modals/DatosIncorrectos";
+import jwtDecode from "jwt-decode";
+// funciona , pero tengo que usar context-api para que sea mejor.
 
 function LoginPage() {
+  const { jwt, setJwt } = useContext(JwtContext);
+
   const [mail, setMail] = useState("");
   const [contrasenia, setContrasenia] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const isEmailMaxLengthReached = mail.length === 50;
+  // Lógica para los modales
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
+  // Lo usaremos después para dar lógica a los componentes según verificaciones.
+  // const isEmailMaxLengthReached = mail.length === 40;
+
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+  
+    const raw = JSON.stringify({
+      "mail": mail,
+      "contrasenia": contrasenia
+    });
+  
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+  
+    try {
+      const response = await fetch("http://localhost:8000/auth/login", requestOptions);
+      const result = await response.text();
+      if(response.status === 200) { 
+        const decodedToken = jwtDecode(result);
+        setJwt({
+          ...jwt,
+          email: decodedToken.email,
+          jwt: result,
+        });
+        localStorage.setItem("token", value);
+
+        window.location.href = "/administracion"
+      }else {
+        setShow(true);
+        const mensajeServidor = JSON.parse(result)["message"];
+        setErrorMessage(mensajeServidor ?? "activamelopapá");
+      }
+    } catch (error) {
+        setShow(true);
+        setErrorMessage(result);
+      }
+  }
+  
+
   return (
     <>
       <div className="container ">
@@ -44,7 +100,7 @@ function LoginPage() {
               </h2>
 
               <div className="card-body">
-                <form id="login-form" method="POST">
+                <form id="login-form" method="POST" onSubmit={handleLogin}>
                   <div className="mb-3 mx-3">
                     <label htmlFor="email" className="label-custom">
                       Email
@@ -113,6 +169,8 @@ function LoginPage() {
           </div>
         </div>
       </div>
+
+      <DatosIncorrectos show={show} handleClose={handleClose} message={errorMessage}/>
     </>
   );
 }

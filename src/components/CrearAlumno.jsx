@@ -1,8 +1,14 @@
 import React from 'react'
 import conejoAlumno from '../assets/images/Alumnos-Adentro-Admin-Conejo.jpg'
 import { UilUserPlus } from '@iconscout/react-unicons'
+import ModalCrearAlumno from './modals/ModalCrearAlumno'
+import { useState } from 'react'
 
 function CrearAlumno() {
+    const [showAlumnos, setShowAlumnos] = useState(false)
+
+    const handleCloseAlumnos = () => setShowAlumnos(false);
+    const handleShowAlumnos = () => setShowAlumnos(true);
   return (
     <>
         <div className="container row mx-auto py-lg-5 flex-md-row-reverse " >
@@ -28,14 +34,14 @@ function CrearAlumno() {
                 </div>
                 <div className="col-lg-6 mx-auto d-flex align-items-center">
                     <div className=''>
-                        <h3 className='text-center' style={{ color: "#866a80" }}>¡Puedes crear los alumnos que necesites!</h3>                   
-                        
+                        <h3 className='text-center' style={{ color: "#866a80" }}>¡Puedes crear los alumnos que necesites!</h3>        
                     <div className='text-center mt-3'>
-                        <button className='col-md-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }}>Crear Alumno <UilUserPlus/></button>
+                        <button className='col-md-4 btn text-white rounded-4 ' style={{ background: "#4d3147 " }} onClick={handleShowAlumnos}>Crear Alumno <UilUserPlus/></button>
                     </div>
                     </div>
                 </div>
             </div>
+            <ModalCrearAlumno showAlumnos={showAlumnos} handleCloseAlumnos={handleCloseAlumnos}/>
     </>
   )
 }

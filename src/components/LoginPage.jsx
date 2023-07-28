@@ -1,27 +1,57 @@
+/* -> Importaciones Lógica */
 import React, { useState, useContext, useEffect } from "react";
-import JwtContext from "./JwtContext";
-import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
-import { UilArrowRight } from "@iconscout/react-unicons";
-import DatosIncorrectos from "./modals/DatosIncorrectos";
-import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-// funciona , pero tengo que usar context-api para que sea mejor.
+import JwtContext from "../context/JwtContext";
+import jwtDecode from "jwt-decode";
+
+// Importar funciones lógicas
+import { verificarContrasenia, verificarMail } from "../utils/validaciones";
+
+/* -> Importaciones para mejorar la UI */
+import DatosIncorrectos from "./modals/DatosIncorrectos";
+import { UilArrowRight } from "@iconscout/react-unicons";
+import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
 
 function LoginPage() {
   const { setJwt } = useContext(JwtContext);
+  const navigate = useNavigate();
 
   const [mail, setMail] = useState("");
-  const navigate = useNavigate();
   const [contrasenia, setContrasenia] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+
 
   // Lógica para los modales
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
-  // Lo usaremos después para dar lógica a los componentes según verificaciones.
-  // const isEmailMaxLengthReached = mail.length === 40;
+  
+  // Estados para la el Modal de Error
+  const [errorMessage, setErrorMessage] = useState("");
 
+  // Lógica para la válidación de Inputs
+  const longMaximaInput = 40;
+  const minLenghtPass = 8;
+  const [arrayError, setArrayError] = useState([])
+  const [arrayErrorMail, setArrayErrorMail] = useState([])
+
+  // Estos use-effects hacen que se rendericen los errores en tiempo real.
+  useEffect(() => {
+    const errors = verificarContrasenia(contrasenia);
+
+    if (contrasenia.length >= longMaximaInput) {
+      errors.push(`La contraseña debe tener como máximo ${longMaximaInput} caracteres.`);
+    }
+
+    setArrayError(errors);
+  }, [contrasenia]);
+
+  useEffect(() => {
+    const errors = verificarMail(mail);
+    setArrayErrorMail(errors);
+  }, [mail]);
+  
+  // Logica para el boton
+  const disableSubmit = arrayError.length !== 0 || arrayErrorMail.length !== 0;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,7 +74,9 @@ function LoginPage() {
 
       // console.log(response)
       if(response.status >= 400){
-        throw new Error("test")
+        const errorBody = await response.json(); // hay que hacer un await por que el response también viene en async!
+        // console.error('Error del servidor:', errorBody);
+        throw new Error(errorBody.message);
       }
 
       const result = await response.json();
@@ -54,46 +86,53 @@ function LoginPage() {
       // console.log(decodedToken)
 
       setJwt({
-        mail: decodedToken.mail,
+        id: decodedToken._id,
         token: result.access_token,
+        nombre: decodedToken.nombre,
+        apellido: decodedToken.contrasenia,
+        direccion: decodedToken.direccion,
+        dni: decodedToken.dni,
+        celular: decodedToken.celular,
+        email: decodedToken.mail,
         // agregar mas datos después
       });
 
       localStorage.setItem("token", result.access_token);
 
       navigate("/auth/")
-
-
-      // if(response.status == 200){
-      //   const result = await response.text();
-
-      //   const decodedToken = await jwtDecode(result);
-        
-        
-      //   setJwt({
-      //     ...jwt,
-      //     email: decodedToken.email,
-      //     jwt: result,
-      //   });
-      //   localStorage.setItem("token", jwt);
-  
-      //   window.location.href = "/administracion"
-      // }else{
-      //   setShow(true);
-      //   const mensajeServidor = JSON.parse(error)["message"];
-      //   setErrorMessage(mensajeServidor ?? "activamelopapá");
-      // }
       }
     catch (error) {
-      // setShow(true);
-      // setErrorMessage(error ?? "activamelopapá");
-
       setShow(true);
-      const mensajeServidor = JSON.parse(error)["message"];
-      setErrorMessage(mensajeServidor ?? "activamelopapá");
-      }
+      setErrorMessage(error.message ?? "activamelopapá");
+    }
   }
   
+  // -> Lógica de Checkeo de tener el JWT para estar logeado.
+  useEffect(() => {
+    // Verificar si ya hay un token en el almacenamiento local
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken) {
+      // Decodificar el token para obtener información relevante
+      const decodedToken = jwtDecode(storedToken);
+
+      // Verificar si el token es válido y no ha expirado
+      const tokenExpiration = decodedToken.exp * 1000; // Convertir la fecha de expiración del token a milisegundos
+      const currentTime = Date.now();
+
+      if (tokenExpiration > currentTime) {
+        // El token es válido y no ha expirado, por lo tanto, el usuario ya está autenticado
+        setJwt({
+          mail: decodedToken.mail,
+          token: storedToken,
+          // agregar mas datos después
+        });
+
+        // Redirigir a la página de administración
+        navigate("/auth/");
+      }
+    }
+  }, [setJwt, navigate]);
 
   return (
     <>
@@ -114,7 +153,7 @@ function LoginPage() {
                 src={girl}
                 alt="Imagen del usuario"
                 style={{
-                  width: "70%",
+                  width: "80%",
                   borderRadius: "50%",
                 }}
               />
@@ -144,25 +183,26 @@ function LoginPage() {
                       name="email"
                       placeholder="nombre@ejemplo.com"
                       required
-
                       value={mail}
-                      onChange={(e) => {setMail(e.target.value);}}
-                      maxLength={40}
+                      onChange={(e) => {
+                        setMail(e.target.value);
+                      }}
+                      maxLength={longMaximaInput}
                       style={{
                         background: "#c9b7c7",
                         boxShadow: "inset 0 2px 3px #4d3147",
-                        border: mail.length >= 40 ? "2px solid red" : undefined,
+                        border: mail.length === longMaximaInput ? "2px solid red" : undefined,
                       }}
                     />
-                    {
-                      mail.length == 40 && (
-                        <p className="text-danger">La cantidad máxima de caracteres es 40</p>
-                      ) 
-                    } 
+                    {arrayErrorMail.map((error, index) => (
+                      <p key={index} className="text-danger">
+                        {error}
+                      </p>
+                    ))}
                   </div>
                   <div className="mb-3 mx-3">
                     <label htmlFor="password" className="label-custom">
-                      Contraseña                   
+                      Contraseña
                     </label>
                     <input
                       type="password"
@@ -170,14 +210,22 @@ function LoginPage() {
                       id="password"
                       name="password"
                       placeholder="Contraseña"
+                      minLength={minLenghtPass}
+                      maxLength={longMaximaInput}
                       required
                       style={{
                         background: "#c9b7c7",
                         boxShadow: "inset 0 2px 3px #4d3147",
+                        border: arrayError.length !== 0 ? "2px solid red" : undefined
                       }}
                       value={contrasenia}
                       onChange={(e) => setContrasenia(e.target.value)}
                     />
+                    {arrayError.map((error, index) => (
+                      <p key={index} className="text-danger">
+                        {error}
+                      </p>
+                    ))}
                   </div>
                   <div className="form-check justify-content-center">
                     <input
@@ -195,6 +243,7 @@ function LoginPage() {
                       type="submit"
                       id="submit-button"
                       style={{ background: "#4d3147 " }}
+                      disabled={disableSubmit}
                     >
                       Iniciar Sesión
                       <UilArrowRight size="30" color="#C9B7C7" />
@@ -207,7 +256,11 @@ function LoginPage() {
         </div>
       </div>
 
-      <DatosIncorrectos show={show} handleClose={handleClose} message={errorMessage}/>
+      <DatosIncorrectos
+        show={show}
+        handleClose={handleClose}
+        message={errorMessage}
+      />
     </>
   );
 }

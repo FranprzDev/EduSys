@@ -1,22 +1,32 @@
-import React from 'react';
-import { UilTimesCircle } from '@iconscout/react-unicons'
-import PopoverInfo from '../Popovers/PopoverInfo';
-import PopoverCuenta from '../Popovers/PopoverCuenta';
-import PopoverSalir from '../Popovers/PopoverSalir';
+import React from "react";
+import PopoverInfo from "../popovers/PopoverInfo";
+import PopoverCuenta from "../popovers/PopoverCuenta";
+import PopoverSalir from "../popovers/PopoverSalir";
+import LogoImage from "../../assets/images/Logo.png";
+import { useNavigate } from "react-router";
 
 const NavBarAdministracion = () => {
+  const navigate = useNavigate()
   return (
     <>
-      <div className='container'>
-        <div className='row'>
-          <div className='col'>
-            <img src="../src/assets/Images/Logo.png" alt="Logo" style={{ height: "100px", width: "150px" }} />
-
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <button
+              className="btn btn-outline text-gray rounded-4"
+              onClick={() => navigate("/")}
+            >
+              <img
+                src={LogoImage}
+                alt="Logo"
+                style={{ height: "100px", width: "150px" }}
+              />
+            </button>
           </div>
-          <div className='col d-flex justify-content-end align-items-center'>
-            <PopoverInfo/>
-            <PopoverCuenta/>
-            <PopoverSalir/>
+          <div className="col d-flex justify-content-end align-items-center">
+            <PopoverInfo />
+            <PopoverCuenta />
+            <PopoverSalir />
           </div>
         </div>
       </div>

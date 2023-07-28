@@ -1,5 +1,5 @@
 import React from 'react'
-import NavError from '../components/Navbars/NavError'
+import NavError from '../components/navbars/NavError'
 import conejo from "../assets/images/404-conejo.jpeg"
 
 function NotFound({ mensajeError = "" }) {

@@ -1,4 +1,4 @@
-import NavError from "../components/Navbars/NavError";
+import NavError from "../components/navbars/NavError";
 import LoginPage from "../components/LoginPage";
 
 const Login = () => {

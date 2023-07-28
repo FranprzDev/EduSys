@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import JwtContext from "../JwtContext";
+import JwtContext from "../../context/JwtContext";
 
 import { UilTimesCircle } from '@iconscout/react-unicons'
 import { useNavigate } from 'react-router-dom';

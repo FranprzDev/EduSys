@@ -5,11 +5,11 @@ import { UilExclamationTriangle , UilTimes } from '@iconscout/react-unicons'
 import AngryRabbit from '../../assets/images/angry-rabbit.jpg'
 
 
-function RellenarCampos({ show, handleClose }) {
+function CustomError({ show, handleClose, message }) {
   return (
     <>
       {(show) && (
-        <div className="modal" style={{ display: 'block' }} tabIndex="-1" >
+        <div className="modal" tabIndex="-1" >
           <div className="modal-dialog">
             <div className="modal-content">
               <h4 className="text-center mt-3">
@@ -33,7 +33,7 @@ function RellenarCampos({ show, handleClose }) {
                     
                   </div>
                   <div className="col-6 d-flex justify-content-center align-items-center">
-                    <p className='text-dark fs-5'><bold>Debes completar todos los formularios.</bold></p>
+                    <p className='text-dark fs-5'><bold>{message}</bold></p>
                   </div>
                 </div>
                 
@@ -50,4 +50,4 @@ function RellenarCampos({ show, handleClose }) {
   )
 }
 
-export default RellenarCampos
+export default CustomError

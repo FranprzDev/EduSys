@@ -16,7 +16,7 @@ function DatosIncorrectos({ show, handleClose, message }) {
   return (
     <>
       {show && (
-        <div className="modal" style={{ display: "block" }} tabIndex="-1">
+        <div className="modal" tabIndex="-1">
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <h4 className="text-center mt-3">

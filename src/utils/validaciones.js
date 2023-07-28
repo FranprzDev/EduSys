@@ -47,3 +47,29 @@ export const verificarContrasenia = (contrasenia) => {
 
   return newErrors;
 };
+
+export const verificarDatos = (nombre, apellido, dni, celular, direccion) => {
+  const errors = [];
+
+  if (!nombre || nombre.length < 3 || nombre.length > 25) {
+    errors.push("El nombre debe tener entre 3 y 25 caracteres.");
+  }
+
+  if (!apellido || apellido.length < 3 || apellido.length > 25) {
+    errors.push("El apellido debe tener entre 3 y 25 caracteres.");
+  }
+
+  if (!dni || dni.length < 7 || dni.length > 8) {
+    errors.push("El DNI debe tener entre 7 y 8 caracteres.");
+  }
+
+  if (!celular || celular.length < 7 || celular.length > 8) {
+    errors.push("El número de celular debe tener entre 7 y 8 caracteres.");
+  }
+
+  if (!direccion || direccion.length < 6 || direccion.length > 70) {
+    errors.push("La dirección debe tener entre 6 y 70 caracteres.");
+  }
+
+  return errors;
+};

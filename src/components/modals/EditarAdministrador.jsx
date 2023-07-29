@@ -8,9 +8,27 @@ function EditarAdministrador({
   onSubmit = undefined,
   adminData = undefined,
 }) {
-  const [nombre, setNombre] = useState(adminData.nombre);
-  const [apellido, setApellido] = useState(adminData.apellido);
-  const [dni, setDni] = useState(adminData.dni);
+  const [nombre, setNombre] = useState(adminData?.nombre || "");
+  const [apellido, setApellido] = useState(adminData?.apellido || "");
+  const [dni, setDni] = useState(adminData?.dni || "");
+
+  // Función para manejar el envío del formulario
+  const handleFormSubmit = () => {
+    console.log(nombre)
+    console.log(apellido)
+    console.log(dni)
+    // uso el spreadoperator para ir trayendome lo que ya tenia
+    const updatedAdminData = {
+      ...adminData,
+      nombre: nombre == undefined ? adminData.nombre : nombre,
+      apellido: apellido == undefined ? adminData.apellido : apellido,
+      dni: dni == undefined ? adminData.dni : dni,
+    };
+
+
+    console.log(updatedAdminData)
+    onSubmit(updatedAdminData);
+  };
 
   return (
     <>
@@ -76,7 +94,7 @@ function EditarAdministrador({
                 type="button"
                 className="btn text-white rounded-4"
                 style={{ background: "#4d3147 " }}
-                onClick={onSubmit}
+                onClick={handleFormSubmit}
               >
                 Guardar Cambios <UilUpload className="ms-2" />
               </button>

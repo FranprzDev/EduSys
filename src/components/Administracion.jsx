@@ -99,15 +99,15 @@ function Administracion() {
     setAdminData(admin);
   }, [idAdmin, nombreAdmin, apellidoAdmin, dniAdmin]);
 
-  const handleUpdateAdmin = async () => {
+  const handleUpdateAdmin = async (adminModal = undefined) => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
   
     const raw = JSON.stringify({
-      nombre: adminData.nombre,
-      apellido: adminData.apellido,
-      dni: adminData.dni,
+      nombre: adminModal.nombre,
+      apellido: adminModal.apellido,
+      dni: adminModal.dni,
     });
   
     const requestOptions = {
@@ -116,37 +116,39 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    
-    console.log("adminData: ", adminData)
-    console.log("adminData.adminId: ", adminData.adminId)
-    console.log("requestOptions: ", requestOptions)
+    console.log(adminModal)
+
+    // console.log("IdAdmin -> UseState", idAdmin); 
+    // console.log("NombreAdmin -> UseState", nombreAdmin);
+    // console.log("adminData: ", adminData)
+    // console.log("adminData.adminId: ", adminData.adminId)
+    // console.log("requestOptions: ", requestOptions)
 
     
 
-    try {
-      const response = await fetch(
-        `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
-        requestOptions
-      );
+    // try {
+    //   const response = await fetch(
+    //     `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
+    //     requestOptions
+    //   );
   
-      const result = await response.json();
-      // console.log(result.message); -> me tengo que quedar con este
-      console.log(result.message);
-      if (result.message === "Se encontro el administrador.") {
-        onCloseEditarAdmin();
-        getAllAdmins();
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
+    //   const result = await response.json();
+    //   if (!response.ok) {
+    //     throw new Error("Hubo un problema al actualizar los datos");
+    //   }
+    //   // console.log(result.message); -> me tengo que quedar con este
+    //   console.log(result.message);
+    //   if (result.message === "Se encontro el administrador.") {
+    //     onCloseEditarAdmin();
+    //     getAllAdmins();
+    //   }
+    // } catch (error) {
+    //   console.log("error", error);
+    // }
   };
   
   const onCloseEditarAdmin = () => {
     setShowEditarAdmin(false)
-    setID("")
-    setNombreAdmin("")
-    setApellidoAdmin("")
-    setDniAdmin("")
   }
 
   useEffect(() => {

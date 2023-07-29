@@ -22,7 +22,7 @@ import { JackInTheBox, Slide } from "react-awesome-reveal";
 import TablaCardAdmin from "./tablas/admin/TablaCardAdmin";
 import TablaAdmin from "./tablas/admin/TablaAdmin";
 import EstasSeguro from "./modals/EstasSeguro";
-import DatosIncorrectos from "./modals/DatosIncorrectos";
+import EditarAdministrador from "./modals/EditarAdministrador";
 
 function Administracion() {
   // Necesarios para moverme & lógica de CRUD
@@ -33,29 +33,121 @@ function Administracion() {
   const [show, setShow] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [idTentativo, setIdTentativo] = useState("");
 
   const handleClosePass = () => setShowPass(false);
   const handleShowPass = () => setShowPass(true);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [message, setMessage] = useState("");
 
   // estos son para el estas seguro? del trash no funcionan
-  const handleCloseEstas = () => setShowEstas(false);
-  const handleShowEstas = () => setShowEstas(true);
+  const [showEstas, setShowEstas] = useState(false)
 
-  // Modal de CustomError
-  const [mostrarCustomError, setMostrarCustomError] = useState(false);
-  const [customError, setCustomError] = useState("");
-  const handleCloseCustomError = () => setMostrarCustomError(false);
-  const handleShowCustomError = () => setMostrarCustomError(true);
+  const handleCloseEstas = () => {
+    setShowEstas(false);
+    setIdTentativo("");
+  }
+  const handleOpenEstas = (id) => {
+    setIdTentativo(id)
+    setShowEstas(true)
+  }
+
+
 
   // Manejar el mensaje en función del botón presionado
   const handleShowMessage = (text) => {
     setMessage(text);
     setShow(!show);
   };
+
+  // Lógica para el modal de EditarAdministrador
+  const [showEditarAdmin, setShowEditarAdmin] = useState("")
+
+    const [idAdmin, setID] = useState(""); 
+    const [nombreAdmin, setNombreAdmin] = useState("");
+    const [apellidoAdmin, setApellidoAdmin] = useState("");
+    const [dniAdmin, setDniAdmin] = useState("");
+
+    const [adminData, setAdminData] = useState({})
+
+    const handleOpenUpdateAdmin = (id, nombre, apellido, dni) => { 
+      
+      setID(id)
+      setNombreAdmin(nombre)
+      setApellidoAdmin(apellido)
+      setDniAdmin(dni)  
+      
+    let admin = {
+      adminId: idAdmin,
+      nombre: nombreAdmin,
+      apellido: apellidoAdmin,
+      dni: dniAdmin,
+    }
+
+    setAdminData(admin)
+    setShowEditarAdmin(true)
+  }
+
+  useEffect(() => {
+    let admin = {
+      adminId: idAdmin,
+      nombre: nombreAdmin,
+      apellido: apellidoAdmin,
+      dni: dniAdmin,
+    };
+    setAdminData(admin);
+  }, [idAdmin, nombreAdmin, apellidoAdmin, dniAdmin]);
+
+  const handleUpdateAdmin = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
+  
+    const raw = JSON.stringify({
+      nombre: adminData.nombre,
+      apellido: adminData.apellido,
+      dni: adminData.dni,
+    });
+  
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    
+    console.log("adminData: ", adminData)
+    console.log("adminData.adminId: ", adminData.adminId)
+    console.log("requestOptions: ", requestOptions)
+
+    
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
+        requestOptions
+      );
+  
+      const result = await response.json();
+      // console.log(result.message); -> me tengo que quedar con este
+      console.log(result.message);
+      if (result.message === "Se encontro el administrador.") {
+        onCloseEditarAdmin();
+        getAllAdmins();
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  
+  const onCloseEditarAdmin = () => {
+    setShowEditarAdmin(false)
+    setID("")
+    setNombreAdmin("")
+    setApellidoAdmin("")
+    setDniAdmin("")
+  }
 
   useEffect(() => {
     confetti();
@@ -117,7 +209,7 @@ function Administracion() {
 
   // Comienzo de Función de Eliminación de DB
 
-  const handleDeleteAdmin = async (id) => {
+  const handleDeleteAdmin = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
 
@@ -129,12 +221,13 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/delete-by-id/${id}`,
+        `http://localhost:8000/admin/delete-by-id/${idTentativo}`,
         requestOptions
       );
       const result = await response.text();
       console.log(result);
       await getAllAdmins();
+      handleCloseEstas();
     } catch (error) {
       console.log("error", error);
     }
@@ -172,6 +265,7 @@ function Administracion() {
       await getAllAdmins();
       handleClose()
     } catch (error) {
+      // open modal y le paso msg 
       setCustomError(error.message)
       setMostrarCustomError(true)
       setErrorMessage(error.message ?? "activamelopapá");
@@ -286,7 +380,7 @@ function Administracion() {
                         <th scope="col">MongoID</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
-                        <th scope="col">Contraseña</th>
+                        {/* <th scope="col">Contraseña</th> */}
                         <th scope="col">Direccion</th>
                         <th scope="col">DNI</th>
                         <th scope="col">Celular</th>
@@ -301,12 +395,13 @@ function Administracion() {
                           mongoID={admin._id}
                           nombre={admin.nombre}
                           apellido={admin.apellido}
-                          contrasenia={admin.contrasenia}
+                          // contrasenia={admin.contrasenia}
                           direccion={admin.direccion}
                           dni={admin.dni}
                           celular={admin.celular}
                           mail={admin.mail}
-                          onDelete={handleDeleteAdmin}
+                          onDelete={handleOpenEstas}
+                          onUpdate={handleOpenUpdateAdmin}
                         />
                       ))}
                     </tbody>
@@ -324,12 +419,13 @@ function Administracion() {
                             mongoID={admin._id}
                             nombre={admin.nombre}
                             apellido={admin.apellido}
-                            contrasenia={admin.contrasenia}
+                            // contrasenia={admin.contrasenia}
                             direccion={admin.direccion}
                             dni={admin.dni}
                             celular={admin.celular}
                             mail={admin.mail}
-                            onDelete={handleDeleteAdmin}
+                            onDelete={handleOpenEstas}
+                            onUpdate={handleOpenUpdateAdmin}
                           />
                         ))}
                       </div>
@@ -343,19 +439,26 @@ function Administracion() {
           </Slide>
         </>
       </JackInTheBox>
-      <ActualizarDatos
-        show={show}
-        handleClose={handleClose}
-        message={message}
-        admin={undefined}
-        createAdmin={handleCreateAdmin}
-      />
+
+      { show && (
+        <ActualizarDatos handleClose={handleClose} message={message} admin={undefined} createAdmin={handleCreateAdmin}/>
+      )}
       <ActualizarContraseña
         showPass={showPass}
         handleClosePass={handleClosePass}
       />
-      <EstasSeguro showEstas={handleShowEstas} handleCloseEstas={handleCloseEstas} />
-      <DatosIncorrectos show={handleShowCustomError} handleClose={handleCloseCustomError} message={customError}/>
+      {showEstas && (
+        <EstasSeguro onAccept={handleDeleteAdmin} onClose={handleCloseEstas} />
+      )}
+      {
+        showEditarAdmin && (
+          <EditarAdministrador onCloseModal={onCloseEditarAdmin} 
+          onShowModal={() => {handleOpenUpdateAdmin()}}
+          onSubmit={() => {handleUpdateAdmin()}}
+          adminData={adminData}
+          />
+        )
+      }
     </>
   );
 }

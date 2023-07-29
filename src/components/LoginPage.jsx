@@ -8,12 +8,13 @@ import jwtDecode from "jwt-decode";
 import { verificarContrasenia, verificarMail } from "../utils/validaciones";
 
 /* -> Importaciones para mejorar la UI */
-import DatosIncorrectos from "./modals/DatosIncorrectos";
 import { UilArrowRight } from "@iconscout/react-unicons";
 import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
+import { ErrorContext } from "../context/ErrorContext";
 
 function LoginPage() {
   const { setJwt } = useContext(JwtContext);
+  const { openErrorModal } = useContext(ErrorContext);
   const navigate = useNavigate();
 
   const [mail, setMail] = useState("");
@@ -102,8 +103,11 @@ function LoginPage() {
       navigate("/auth/")
       }
     catch (error) {
-      setShow(true);
-      setErrorMessage(error.message ?? "activamelopapá");
+      openErrorModal(error.message)
+      // setShow(true);
+
+      // setErrorMessage(error.message ?? "activamelopapá");
+
     }
   }
   
@@ -255,12 +259,6 @@ function LoginPage() {
           </div>
         </div>
       </div>
-
-      <DatosIncorrectos
-        show={show}
-        handleClose={handleClose}
-        message={errorMessage}
-      />
     </>
   );
 }

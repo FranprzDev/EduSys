@@ -10,7 +10,7 @@ const TablaCard = ({
   mongoID = undefined,
   nombre = undefined,
   apellido = undefined,
-  contrasenia = undefined,
+  // contrasenia = undefined,
   direccion = undefined,
   dni = undefined,
   celular = undefined,
@@ -32,7 +32,7 @@ const TablaCard = ({
         <div className="card-body">
           <ul className="list-unstyled">
             <li>DNI: {dni}</li>
-            <li>Contraseña: {contrasenia}</li>
+            {/* <li>Contraseña: {contrasenia}</li> */}
             <li>Domicilio: {direccion}</li>
             <li>Celular: {celular}</li>
             <li>Mail: {mail}</li>

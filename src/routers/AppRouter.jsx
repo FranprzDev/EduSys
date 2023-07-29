@@ -11,10 +11,13 @@ import LoginScreen from "../pages/LoginScreen";
 import AdministradorScreen from '../pages/AdministradorScreen';
 import NotFoundScreen from '../pages/NotFoundScreen';
 import AlumnosScreen from '../pages/AlumnosScreen';
+import DatosIncorrectos from '../components/modals/DatosIncorrectos';
+import { ErrorContext } from '../context/ErrorContext';
 
 
 function AppRouter() {
   const { jwt } = useContext(JwtContext);
+  const { showModalError } = useContext(ErrorContext)
   const navigate = useNavigate();
 
   // Verificar si ya hay un token en el almacenamiento local
@@ -38,19 +41,26 @@ function AppRouter() {
   }, [navigate]);
 
   return (
-    <Routes>
-      <Route path="/" element={<HomeScreen />} />
-      <Route path="/login" element={<LoginScreen />} />
-      {jwt.token !== undefined ? (
-        <>
-          <Route path="/auth/" element={<AdministradorScreen />} />
-          <Route path="/auth/alumnos" element={<AlumnosScreen />} />
-        </>
-      ) : (
-        <Route path="/auth/*" element={<NotFoundScreen mensajeError="¡Se produjo un error en el acceso a la Aplicación!" />} />
-      )}
-      <Route path="/*" element={<NotFoundScreen />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        {jwt.token !== undefined ? (
+          <>
+            <Route path="/auth/" element={<AdministradorScreen />} />
+            <Route path="/auth/alumnos" element={<AlumnosScreen />} />
+          </>
+        ) : (
+          <Route path="/auth/*" element={<NotFoundScreen mensajeError="¡Se produjo un error en el acceso a la Aplicación!" />} />
+        )}
+        <Route path="/*" element={<NotFoundScreen />} />
+      </Routes>
+      {
+        showModalError && (
+          <DatosIncorrectos/>
+        ) 
+      }
+    </>
   )
 }
 

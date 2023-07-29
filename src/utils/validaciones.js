@@ -24,7 +24,7 @@ export const verificarContrasenia = (contrasenia) => {
   const mayusculaRegex = /^(?=.*[A-Z])/;
   const numeroRegex = /^(?=.*\d)/;
   const caracterEspecialRegex = /^(?=.*[@#$%^&+=!])/;
-  const longitudRegex = /.{8,40}/;
+  const longitudRegex = /^.{0,40}$/;
 
   const cumpleMayuscula = mayusculaRegex.test(contrasenia);
   const cumpleNumero = numeroRegex.test(contrasenia);
@@ -51,16 +51,22 @@ export const verificarContrasenia = (contrasenia) => {
 export const verificarDatos = (nombre, apellido, dni, celular, direccion) => {
   const errors = [];
 
-  if (!nombre || nombre.length < 3 || nombre.length > 25) {
-    errors.push("El nombre debe tener entre 3 y 25 caracteres.");
+  if(nombre !== "pase"){
+    if (!nombre || nombre.length < 3 || nombre.length > 25) {
+      errors.push("El nombre debe tener entre 3 y 25 caracteres.");
+    }
   }
 
-  if (!apellido || apellido.length < 3 || apellido.length > 25) {
-    errors.push("El apellido debe tener entre 3 y 25 caracteres.");
+  if(apellido !== "pase"){
+    if (!apellido || apellido.length < 3 || apellido.length > 25) {
+      errors.push("El apellido debe tener entre 3 y 25 caracteres.");
+    }
   }
 
-  if (!dni || dni.length < 7 || dni.length > 8) {
-    errors.push("El DNI debe tener entre 7 y 8 caracteres.");
+  if(dni !== "pase"){
+    if (!dni || dni.length < 7 || dni.length > 8) {
+      errors.push("El DNI debe tener entre 7 y 8 caracteres.");
+    }
   }
 
   if (!celular || celular.length < 7 || celular.length > 8) {

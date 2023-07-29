@@ -14,15 +14,15 @@ const initalState = {
 }
 
 const Context = createContext({
-    id: initalState,
-    jwt: initalState,
+    id: '',
+    jwt: '',
     setJwt: () => {},
     destroySession: () => {},
-    nombre: initalState,
-    apellido: initalState,
-    direccion: initalState,
-    dni: initalState,
-    celular: initalState,
+    nombre: '',
+    apellido: '',
+    direccion: '',
+    dni: '',
+    celular: '',
 });
 
 

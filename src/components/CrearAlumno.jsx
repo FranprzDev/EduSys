@@ -1,4 +1,3 @@
-import React from 'react'
 import conejoAlumno from '../assets/images/Alumnos-Adentro-Admin-Conejo.jpg'
 import { UilUserPlus } from '@iconscout/react-unicons'
 

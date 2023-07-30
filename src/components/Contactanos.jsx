@@ -1,7 +1,8 @@
-import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import ContactanosModal from "./modals/ContactanosModal";
 import { UilArrowRight } from "@iconscout/react-unicons";
+import { useState } from "react";
+
 
 function Contactanos() {
   const [show, setShow] = useState(false);

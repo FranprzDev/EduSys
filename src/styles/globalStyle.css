@@ -18,3 +18,33 @@
 .custom-violet-third-color {
     color: #C9B7C7
 }
+
+/* styles.css */
+  .tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #FFFBFF;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .tooltip-content {
+    margin-top: 5px;
+  }
+  
+/* styles.css */
+/* ...otros estilos... */
+
+.tooltip-modal {
+    position: fixed;
+    z-index: 9999;
+    padding: 10px;
+    background-color: #FFFBFF;
+    color: #4D3147;
+    border-radius: 4px;
+    font-size: 14px;
+  }

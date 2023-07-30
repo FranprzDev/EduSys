@@ -1,9 +1,5 @@
-import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { UilFacebook, UilInstagram, UilTwitter } from '@iconscout/react-unicons'
-
-
-
 
 function Footer() {
     return (

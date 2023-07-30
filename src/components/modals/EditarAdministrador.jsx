@@ -4,31 +4,11 @@ import "bootstrap/dist/js/bootstrap.bundle";
 import { UilTimes, UilUpload } from "@iconscout/react-unicons";
 
 function EditarAdministrador({
-  onCloseModal = undefined,
-  onSubmit = undefined,
-  adminData = undefined,
+  onCloseModal = () => undefined,
+  onSubmit = () => undefined,
+  adminData = { nombre: '', apellido: '', dni: '' },
+  onChangeAdminData = (prop, value) => undefined,
 }) {
-  const [nombre, setNombre] = useState(adminData?.nombre || "");
-  const [apellido, setApellido] = useState(adminData?.apellido || "");
-  const [dni, setDni] = useState(adminData?.dni || "");
-
-  // Función para manejar el envío del formulario
-  const handleFormSubmit = () => {
-    console.log(nombre)
-    console.log(apellido)
-    console.log(dni)
-    // uso el spreadoperator para ir trayendome lo que ya tenia
-    const updatedAdminData = {
-      ...adminData,
-      nombre: nombre == undefined ? adminData.nombre : nombre,
-      apellido: apellido == undefined ? adminData.apellido : apellido,
-      dni: dni == undefined ? adminData.dni : dni,
-    };
-
-
-    console.log(updatedAdminData)
-    onSubmit(updatedAdminData);
-  };
 
   return (
     <>
@@ -45,8 +25,9 @@ function EditarAdministrador({
                 type="text"
                 className="form-control rounded-4 my-3"
                 placeholder="Ingres un nuevo nombre"
-                defaultValue={adminData.nombre} 
-                onChange={(e) => setNombre(e.target.value)}
+                defaultValue={adminData.nombre}
+                name="nombre"
+                onChange={({ target: { value, name } }) => onChangeAdminData(name, value)}
                 style={{
                   background: "#c9b7c7",
                   boxShadow: "inset 0 2px 3px #4d3147",
@@ -58,8 +39,9 @@ function EditarAdministrador({
                 type="text"
                 className="form-control rounded-4 my-3"
                 placeholder="Ingres un nuevo apellido"
-                defaultValue={adminData.apellido} 
-                onChange={(e) => setApellido(e.target.value)}
+                defaultValue={adminData.apellido}
+                name="apellido"
+                onChange={({ target: { name, value } }) => onChangeAdminData(name, value)}
                 style={{
                   background: "#c9b7c7",
                   boxShadow: "inset 0 2px 3px #4d3147",
@@ -71,8 +53,9 @@ function EditarAdministrador({
                 type="text"
                 className="form-control rounded-4 my-3"
                 placeholder="Ingres un nuevo DNI"
-                defaultValue={adminData.dni} 
-                onChange={(e) => setDni(e.target.value)}
+                defaultValue={adminData.dni}
+                name="dni"
+                onChange={({ target: { name, value } }) => onChangeAdminData(name, value)}
                 style={{
                   background: "#c9b7c7",
                   boxShadow: "inset 0 2px 3px #4d3147",
@@ -94,7 +77,7 @@ function EditarAdministrador({
                 type="button"
                 className="btn text-white rounded-4"
                 style={{ background: "#4d3147 " }}
-                onClick={handleFormSubmit}
+                onClick={onSubmit}
               >
                 Guardar Cambios <UilUpload className="ms-2" />
               </button>

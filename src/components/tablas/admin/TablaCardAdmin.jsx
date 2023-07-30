@@ -1,10 +1,12 @@
-import React, { useState } from "react";
 import {
   UilAngleDoubleRight,
   UilEdit,
   UilTrashAlt,
   UilCardAtm,
 } from "@iconscout/react-unicons";
+import { useRef, useState } from "react";
+import '../../../styles/globalStyle.css'
+import Tooltip from "../../tooltip";
 
 const TablaCard = ({
   mongoID = undefined,
@@ -15,8 +17,12 @@ const TablaCard = ({
   dni = undefined,
   celular = undefined,
   mail = undefined,
-  onDelete = undefined,
+  onDelete = () => { },
+  onUpdate = () => { },
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const buttonRef = useRef(null)
+
   return (
     <div className="col-xs-12 col-lg-6 my-1">
       <div className="card">
@@ -39,7 +45,12 @@ const TablaCard = ({
           </ul>
         </div>
         <div className="text-center d-flex justify-content-around">
-          <button className="btn rounded-2">
+          <button
+            className="btn rounded-2"
+            onClick={() => {
+              onUpdate(mongoID, nombre, apellido, dni);
+            }}
+          >
             <UilEdit />
           </button>
           <button
@@ -50,9 +61,18 @@ const TablaCard = ({
           >
             <UilTrashAlt />
           </button>
-          <button className="btn rounded-2">
+          <button className="btn rounded-2"
+          ref={buttonRef}
+          onClick={() => {setShowTooltip(!showTooltip)}}>
             <UilCardAtm />
           </button>
+          <Tooltip
+            text={`${mongoID}`}
+            position="top"
+            onClose={() => setShowTooltip(false)}
+            showTooltip={showTooltip}
+            buttonRef={buttonRef}
+          />
         </div>
       </div>
     </div>

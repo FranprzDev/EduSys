@@ -1,7 +1,6 @@
 //  -> Importaciones
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import AuthRouter from './AuthRouter'
 import { JwtContext } from '../context/JwtContext';
 
 

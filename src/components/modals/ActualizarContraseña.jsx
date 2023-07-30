@@ -1,4 +1,3 @@
-import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import {  UilTimes , UilUpload } from '@iconscout/react-unicons'
@@ -6,7 +5,6 @@ import {  UilTimes , UilUpload } from '@iconscout/react-unicons'
 function ActualizarContraseña({showPass, handleClosePass}) {
   return (
     <>
-    {(showPass) && (
         <div className="modal" style={{ display: 'block' }} tabIndex="-1" >
           <div className="modal-dialog">
             <div className="modal-content">
@@ -25,7 +23,6 @@ function ActualizarContraseña({showPass, handleClosePass}) {
             </div>
           </div>
         </div>
-      )}
     </>
   )
 }

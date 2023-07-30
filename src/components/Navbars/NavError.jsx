@@ -1,7 +1,5 @@
-import React from "react";
-
 import { UilHome } from "@iconscout/react-unicons";
-import { Navigate, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 const NavError = () => {
   const navigate = useNavigate()

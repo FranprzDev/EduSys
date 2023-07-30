@@ -1,6 +1,6 @@
 // Importaciones
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { JwtContext } from "../context/JwtContext";
 
 // -> Importaciones de UI
@@ -29,6 +29,18 @@ function Administracion() {
   const { jwt } = useContext(JwtContext);
   const navigate = useNavigate();
 
+  // Manejo del Adminsitrador Común
+
+  const [actDatosModalAdmComun, setactDatosModalAdmComun] = useState(false);
+  const actualizarDatosAdminModalOpen = () => { setactDatosModalAdmComun(true) }
+  const actualizarDatosAdminModalClose = () => { setactDatosModalAdmComun(false) }
+
+  const [actPassModalAdmComun, setactPassModalAdmComun] = useState(false);
+  const actualizarPassAdminModalOpen = () => { setactPassModalAdmComun(true) }
+  const actualizarPassAdminModalClose = () => { setactPassModalAdmComun(false) }
+
+  // Fin del manejo de modales de admin
+
   // -> Lógica para los modales & Recursos visuales <-
   const [show, setShow] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -53,8 +65,6 @@ function Administracion() {
     setShowEstas(true)
   }
 
-
-
   // Manejar el mensaje en función del botón presionado
   const handleShowMessage = (text) => {
     setMessage(text);
@@ -64,89 +74,75 @@ function Administracion() {
   // Lógica para el modal de EditarAdministrador
   const [showEditarAdmin, setShowEditarAdmin] = useState("")
 
-    const [idAdmin, setID] = useState(""); 
-    const [nombreAdmin, setNombreAdmin] = useState("");
-    const [apellidoAdmin, setApellidoAdmin] = useState("");
-    const [dniAdmin, setDniAdmin] = useState("");
+    const [adminData, setAdminData] = useState({ nombre: '', apellido: '', dni: '', id: '' })
 
-    const [adminData, setAdminData] = useState({})
-
-    const handleOpenUpdateAdmin = (id, nombre, apellido, dni) => { 
-      
-      setID(id)
-      setNombreAdmin(nombre)
-      setApellidoAdmin(apellido)
-      setDniAdmin(dni)  
-      
-    let admin = {
-      adminId: idAdmin,
-      nombre: nombreAdmin,
-      apellido: apellidoAdmin,
-      dni: dniAdmin,
+    const handleOpenUpdateAdmin = (id, nombre, apellido, dni) => {
+    const admin = {
+      adminId: id,
+      nombre: nombre,
+      apellido: apellido,
+      dni: dni,
     }
 
     setAdminData(admin)
     setShowEditarAdmin(true)
   }
 
-  useEffect(() => {
-    let admin = {
-      adminId: idAdmin,
-      nombre: nombreAdmin,
-      apellido: apellidoAdmin,
-      dni: dniAdmin,
-    };
-    setAdminData(admin);
-  }, [idAdmin, nombreAdmin, apellidoAdmin, dniAdmin]);
+  const handleChangeUpdateAdminValues = (prop, value) => {
+      setAdminData(values => ({
+        ...values,
+        [prop]: value,
+      }))
+  }
 
-  const handleUpdateAdmin = async (adminModal = undefined) => {
+  const handleUpdateAdmin = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
-  
+
     const raw = JSON.stringify({
-      nombre: adminModal.nombre,
-      apellido: adminModal.apellido,
-      dni: adminModal.dni,
+      nombre: adminData.nombre,
+      apellido: adminData.apellido,
+      dni: adminData.dni,
     });
-  
+
     const requestOptions = {
       method: "PUT",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     };
-    console.log(adminModal)
+    console.log(adminData)
 
-    // console.log("IdAdmin -> UseState", idAdmin); 
+    // console.log("IdAdmin -> UseState", idAdmin);
     // console.log("NombreAdmin -> UseState", nombreAdmin);
     // console.log("adminData: ", adminData)
     // console.log("adminData.adminId: ", adminData.adminId)
     // console.log("requestOptions: ", requestOptions)
 
-    
 
-    // try {
-    //   const response = await fetch(
-    //     `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
-    //     requestOptions
-    //   );
-  
-    //   const result = await response.json();
-    //   if (!response.ok) {
-    //     throw new Error("Hubo un problema al actualizar los datos");
-    //   }
-    //   // console.log(result.message); -> me tengo que quedar con este
-    //   console.log(result.message);
-    //   if (result.message === "Se encontro el administrador.") {
-    //     onCloseEditarAdmin();
-    //     getAllAdmins();
-    //   }
-    // } catch (error) {
-    //   console.log("error", error);
-    // }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
+        requestOptions
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error("Hubo un problema al actualizar los datos");
+      }
+      // console.log(result.message); -> me tengo que quedar con este
+      console.log(result.message);
+      if (result.message === "Se encontro el administrador.") {
+        onCloseEditarAdmin();
+        getAllAdmins();
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
-  
+
   const onCloseEditarAdmin = () => {
     setShowEditarAdmin(false)
   }
@@ -267,7 +263,7 @@ function Administracion() {
       await getAllAdmins();
       handleClose()
     } catch (error) {
-      // open modal y le paso msg 
+      // open modal y le paso msg
       setCustomError(error.message)
       setMostrarCustomError(true)
       setErrorMessage(error.message ?? "activamelopapá");
@@ -375,7 +371,6 @@ function Administracion() {
             {showTable === true && jwt.email === "admin@gmail.com" ? (
               anchoPantalla >= 1200 ? (
                 <section className="d-flex justify-content-center">
-                  {/* <Slide> */}
                   <table className="table w-75">
                     <thead>
                       <tr className="text-center">
@@ -408,7 +403,6 @@ function Administracion() {
                       ))}
                     </tbody>
                   </table>
-                  {/* </Slide> */}
                 </section>
               ) : (
                 <>
@@ -439,27 +433,47 @@ function Administracion() {
               <></>
             )}
           </Slide>
+          {/* Esta es la animación de la table. */}
         </>
       </JackInTheBox>
-
+      {/* Esta es una animación */}
+      
+      {/* Modales de SuperAdministrador */}
+      {/* Modal para actualizar datos de administradores siendo super administrador */}
       { show && (
         <ActualizarDatos handleClose={handleClose} message={message} admin={undefined} createAdmin={handleCreateAdmin}/>
       )}
-      <ActualizarContraseña
-        showPass={showPass}
-        handleClosePass={handleClosePass}
-      />
+
+      {/* Modal para ver si estas seguro en el cambio */}
       {showEstas && (
         <EstasSeguro onAccept={handleDeleteAdmin} onClose={handleCloseEstas} />
       )}
+      {/* Modal para editar el amdinistrador */}
       {
         showEditarAdmin && (
-          <EditarAdministrador onCloseModal={onCloseEditarAdmin} 
-          onShowModal={() => {handleOpenUpdateAdmin()}}
-          onSubmit={() => {handleUpdateAdmin()}}
+          <EditarAdministrador onCloseModal={onCloseEditarAdmin}
+          onShowModal={handleOpenUpdateAdmin}
+          onChangeAdminData={handleChangeUpdateAdminValues}
+          onSubmit={handleUpdateAdmin}
           adminData={adminData}
           />
         )
+      }
+
+      {/* Modales para Administradores Comunes */}
+      {/* Modal para actualizar los datos de un administrador normal*/}
+      {
+        actDatosModalAdmComun && (
+          <ActualizarDatos handleClose={handleClose} message={message} admin={jwt} createAdmin={handleCreateAdmin}/>
+        )
+      }
+      {/* Modal para cambiar la contraseña de un administrador normal*/}
+      { actPassModalAdmComun && (
+        <ActualizarContraseña
+          showPass={showPass}
+          handleClosePass={handleClosePass}
+        />
+      )
       }
     </>
   );

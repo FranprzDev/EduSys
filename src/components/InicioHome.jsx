@@ -1,7 +1,6 @@
-import React from 'react'
 import Conejo from '../assets/images/Admin-Conejo.png'
 import { UilArrowRight } from '@iconscout/react-unicons'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 
 function InicioHome() {
     const navigate = useNavigate()

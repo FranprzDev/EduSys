@@ -26,6 +26,8 @@ const Context = createContext({
 });
 
 
+// Verifica el JWT que ya este puesto pero en el LOCAL STORAGE 
+// La función que me proporciona el JWT al momento del login es la función de loginpage.
 const JwtProvider = ({ children }) => {
     const [jwt, setJwt] = useState(initalState);
     
@@ -34,10 +36,10 @@ const JwtProvider = ({ children }) => {
         if(token){
             const decodedToken = jwtDecode(token);
             setJwt({
-                id: decodedToken._id,
+                id: decodedToken.id,
                 token: token,
                 nombre: decodedToken.nombre,
-                apellido: decodedToken.contrasenia,
+                apellido: decodedToken.apellido,
                 direccion: decodedToken.direccion,
                 dni: decodedToken.dni,
                 celular: decodedToken.celular,

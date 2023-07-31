@@ -84,13 +84,13 @@ function LoginPage() {
       // console.log(result)
 
       const decodedToken = await jwtDecode(result.access_token);
-      // console.log(decodedToken)
+      console.log(decodedToken)
 
       setJwt({
-        id: decodedToken._id,
+        id: decodedToken.id,
         token: result.access_token,
         nombre: decodedToken.nombre,
-        apellido: decodedToken.contrasenia,
+        apellido: decodedToken.apellido,
         direccion: decodedToken.direccion,
         dni: decodedToken.dni,
         celular: decodedToken.celular,

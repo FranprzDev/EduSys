@@ -23,10 +23,14 @@ import TablaCardAdmin from "./tablas/admin/TablaCardAdmin";
 import TablaAdmin from "./tablas/admin/TablaAdmin";
 import EstasSeguro from "./modals/EstasSeguro";
 import EditarAdministrador from "./modals/EditarAdministrador";
+import jwtDecode from "jwt-decode";
+import { ErrorContext } from "../context/ErrorContext";
+import CrearAdmin from "./modals/CrearAdmin";
 
 function Administracion() {
   // Necesarios para moverme & lógica de CRUD
-  const { jwt } = useContext(JwtContext);
+  const { jwt, destroySession } = useContext(JwtContext);
+  const { openErrorModal } = useContext(ErrorContext)
   const navigate = useNavigate();
 
   // Manejo del Adminsitrador Común
@@ -53,7 +57,7 @@ function Administracion() {
   const handleClose = () => setShow(false);
   const [message, setMessage] = useState("");
 
-  // estos son para el estas seguro? del trash no funcionan
+  // este es ele stas seguro del trash
   const [showEstas, setShowEstas] = useState(false)
 
   const handleCloseEstas = () => {
@@ -71,29 +75,35 @@ function Administracion() {
     setShow(!show);
   };
 
-  // Lógica para el modal de EditarAdministrador
-  const [showEditarAdmin, setShowEditarAdmin] = useState("")
+  // -> -> -> Está todo aquí
+  // Lógica para el editar del Super Administrador
+  const [showEditarAdmin, setShowEditarAdmin] = useState("");
 
-    const [adminData, setAdminData] = useState({ nombre: '', apellido: '', dni: '', id: '' })
+  const [adminData, setAdminData] = useState({
+    nombre: "",
+    apellido: "",
+    dni: "",
+    id: "",
+  });
 
-    const handleOpenUpdateAdmin = (id, nombre, apellido, dni) => {
+  const handleOpenUpdateAdmin = (id, nombre, apellido, dni) => {
     const admin = {
       adminId: id,
       nombre: nombre,
       apellido: apellido,
       dni: dni,
-    }
+    };
 
-    setAdminData(admin)
-    setShowEditarAdmin(true)
-  }
+    setAdminData(admin);
+    setShowEditarAdmin(true);
+  };
 
   const handleChangeUpdateAdminValues = (prop, value) => {
-      setAdminData(values => ({
-        ...values,
-        [prop]: value,
-      }))
-  }
+    setAdminData((values) => ({
+      ...values,
+      [prop]: value,
+    }));
+  };
 
   const handleUpdateAdmin = async () => {
     const myHeaders = new Headers();
@@ -112,15 +122,7 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    console.log(adminData)
-
-    // console.log("IdAdmin -> UseState", idAdmin);
-    // console.log("NombreAdmin -> UseState", nombreAdmin);
-    // console.log("adminData: ", adminData)
-    // console.log("adminData.adminId: ", adminData.adminId)
-    // console.log("requestOptions: ", requestOptions)
-
-
+    // console.log(adminData)
 
     try {
       const response = await fetch(
@@ -132,7 +134,7 @@ function Administracion() {
       if (!response.ok) {
         throw new Error("Hubo un problema al actualizar los datos");
       }
-      // console.log(result.message); -> me tengo que quedar con este
+
       console.log(result.message);
       if (result.message === "Se encontro el administrador.") {
         onCloseEditarAdmin();
@@ -140,12 +142,93 @@ function Administracion() {
       }
     } catch (error) {
       console.log("error", error);
+      openErrorModal(error.message)
     }
   };
 
   const onCloseEditarAdmin = () => {
     setShowEditarAdmin(false)
   }
+
+  // Fin de Lógica para editar superAdministrador
+
+  // Inicio de la Lógica para editar el Administrador común [mail, celular, direccion]
+  const [showEditarCommonAdmin, setShowEditarCommonAdmin] = useState(false);
+
+  const onCloseEditarCommonAdmin = () => {
+    setShowEditarCommonAdmin(false)
+  }
+
+  // console.log(jwt)
+  // Establezco los id correspondientes
+
+  const [commonAdminData, setCommonAdminData] = useState({
+    adminId: jwt.id,
+    celular: jwt.celular,
+    mail: jwt.email,
+    direccion: jwt.direccion,
+  });
+
+  const handleOpenUpdateAdminCommon = (celular, mail, direccion) => {
+    const admin = {
+      ...commonAdminData,
+      celular: celular,
+      mail: mail,
+      direccion: direccion,
+    };
+
+    setCommonAdminData(admin);
+    setShowEditarCommonAdmin(true);
+  };
+
+  const handleChangeUpdateAdminCommonValues = (prop, value) => {
+    setCommonAdminData((values) => ({
+      ...values,
+      [prop]: value,
+    }));
+  };
+
+  const handleUpdateCommonAdmin = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      celular: commonAdminData.celular,
+      direccion: commonAdminData.direccion,
+      mail: commonAdminData.mail,
+    });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    // console.log(commonAdminData)
+    // console.log(raw)
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/admin/update-common-by-id/${commonAdminData.adminId}`,
+        requestOptions
+      );
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error("Hubo un problema al actualizar los datos");
+      }
+
+      onCloseEditarCommonAdmin();
+      destroySession()
+    } catch (error) {
+      console.log("error", error);
+      openErrorModal(error.message)
+
+    }
+  }
+  // fin de la lógica para editar el administrador común
+
 
   useEffect(() => {
     confetti();
@@ -223,11 +306,12 @@ function Administracion() {
         requestOptions
       );
       const result = await response.text();
-      console.log(result);
+      // console.log(result);
       await getAllAdmins();
       handleCloseEstas();
     } catch (error) {
       console.log("error", error);
+      openErrorModal(error.message)
     }
   };
 
@@ -263,10 +347,7 @@ function Administracion() {
       await getAllAdmins();
       handleClose()
     } catch (error) {
-      // open modal y le paso msg
-      setCustomError(error.message)
-      setMostrarCustomError(true)
-      setErrorMessage(error.message ?? "activamelopapá");
+      openErrorModal(error.message)
     }
   };
 
@@ -324,7 +405,7 @@ function Administracion() {
                 <div className="col-md-6 col-lg-8 mx-auto">
                   <button
                     className="col-12 btn text-white rounded-4 "
-                    onClick={() => handleShowMessage("Actualizar Datos")}
+                    onClick={() => { setShowEditarCommonAdmin(true) }}
                     style={{ background: "#4d3147 " }}
                   >
                     Actualizar Datos <UilCog />
@@ -437,44 +518,58 @@ function Administracion() {
         </>
       </JackInTheBox>
       {/* Esta es una animación */}
-      
+
+      {/* Crear Administrador siendo SuperAdministrador */}
+
+      {show && (
+        <CrearAdmin
+          handleClose={handleClose}
+          message={message}
+          admin={adminData}
+          createAdmin={handleCreateAdmin}
+        />
+      )
+
+      }
+
       {/* Modales de SuperAdministrador */}
-      {/* Modal para actualizar datos de administradores siendo super administrador */}
-      { show && (
-        <ActualizarDatos handleClose={handleClose} message={message} admin={undefined} createAdmin={handleCreateAdmin}/>
+      {showEditarAdmin && (
+        <EditarAdministrador
+          onCloseModal={onCloseEditarAdmin}
+          onShowModal={handleOpenUpdateAdmin}
+          onChangeAdminData={handleChangeUpdateAdminValues}
+          onSubmit={handleUpdateAdmin}
+          adminData={adminData}
+        />
       )}
 
       {/* Modal para ver si estas seguro en el cambio */}
       {showEstas && (
         <EstasSeguro onAccept={handleDeleteAdmin} onClose={handleCloseEstas} />
       )}
-      {/* Modal para editar el amdinistrador */}
-      {
-        showEditarAdmin && (
-          <EditarAdministrador onCloseModal={onCloseEditarAdmin}
-          onShowModal={handleOpenUpdateAdmin}
-          onChangeAdminData={handleChangeUpdateAdminValues}
-          onSubmit={handleUpdateAdmin}
-          adminData={adminData}
-          />
-        )
-      }
+      {/* Modal para editar el amdinistrador siendo superadminsitrador */}
 
       {/* Modales para Administradores Comunes */}
+
       {/* Modal para actualizar los datos de un administrador normal*/}
-      {
-        actDatosModalAdmComun && (
-          <ActualizarDatos handleClose={handleClose} message={message} admin={jwt} createAdmin={handleCreateAdmin}/>
-        )
-      }
+      {showEditarCommonAdmin && (
+        <ActualizarDatos
+          onCloseModal={onCloseEditarCommonAdmin} // cambiado
+          onShowModal={handleOpenUpdateAdminCommon} // cambiado
+          onChangeAdminData={handleChangeUpdateAdminCommonValues} // cambiado
+          onSubmit={handleUpdateCommonAdmin}
+          adminData={commonAdminData}
+        />
+      )}
+
       {/* Modal para cambiar la contraseña de un administrador normal*/}
-      { actPassModalAdmComun && (
+      {actPassModalAdmComun && (
         <ActualizarContraseña
           showPass={showPass}
           handleClosePass={handleClosePass}
         />
-      )
-      }
+      )}
+
     </>
   );
 }

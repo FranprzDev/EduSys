@@ -12,6 +12,7 @@ import NotFoundScreen from '../pages/NotFoundScreen';
 import AlumnosScreen from '../pages/AlumnosScreen';
 import DatosIncorrectos from '../components/modals/DatosIncorrectos';
 import { ErrorContext } from '../context/ErrorContext';
+import AuthRouter from './AuthRouter';
 
 
 function AppRouter() {
@@ -46,8 +47,9 @@ function AppRouter() {
         <Route path="/login" element={<LoginScreen />} />
         {jwt.token !== undefined ? (
           <>
-            <Route path="/auth/" element={<AdministradorScreen />} />
-            <Route path="/auth/alumnos" element={<AlumnosScreen />} />
+          {/* tengo que pasar el /auth/* */}
+            <Route path="/auth/" element={<AuthRouter />} /> 
+            {/* <Route path="/auth/alumnos" element={<AlumnosScreen />} /> */}
           </>
         ) : (
           <Route path="/auth/*" element={<NotFoundScreen mensajeError="¡Se produjo un error en el acceso a la Aplicación!" />} />

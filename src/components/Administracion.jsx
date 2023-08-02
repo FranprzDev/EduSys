@@ -39,20 +39,12 @@ function Administracion() {
   const actualizarDatosAdminModalOpen = () => { setactDatosModalAdmComun(true) }
   const actualizarDatosAdminModalClose = () => { setactDatosModalAdmComun(false) }
 
-  const [actPassModalAdmComun, setactPassModalAdmComun] = useState(false);
-  const actualizarPassAdminModalOpen = () => { setactPassModalAdmComun(true) }
-  const actualizarPassAdminModalClose = () => { setactPassModalAdmComun(false) }
-
   // Fin del manejo de modales de admin
 
   // -> Lógica para los modales & Recursos visuales <-
   const [show, setShow] = useState(false);
-  const [showPass, setShowPass] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [idTentativo, setIdTentativo] = useState("");
-
-  const handleClosePass = () => setShowPass(false);
-  const handleShowPass = () => setShowPass(true);
 
   const handleClose = () => setShow(false);
   const [message, setMessage] = useState("");
@@ -228,7 +220,66 @@ function Administracion() {
     }
   }
   // fin de la lógica para editar el administrador común
+  // inicio de la lógica para el admin data
 
+  const [showPass, setShowPass] = useState(false);
+  const handleClosePass = () => setShowPass(false);
+  const handleShowPass = () => setShowPass(true);
+
+  const [commonPass, setCommonPass] = useState({
+    adminID: jwt.id,
+    pass: '',
+    retryPass: '',
+  });
+
+  const handleChangePasswordData = (prop, value) => {
+    setCommonPass((values) => ({
+      ...values,
+      [prop]: value,
+    }));
+  };
+
+  const handleUpdatePasswordAdmin = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    console.log("valores: ", commonPass)
+    const raw = JSON.stringify({
+      pass: commonPass.pass,
+      retryPass: commonPass.retryPass
+    });
+
+    console.log("raw: ", raw)
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:8000/admin/update-password/${commonPass.adminID}`,
+        requestOptions
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.mensaje);
+      }
+
+      onCloseEditarCommonAdmin();
+      destroySession()
+      navigate("/login")
+    }
+    catch (error) {
+      console.log("error", error);  // los borro o no?
+      openErrorModal(error.message)
+    }
+  }
 
   useEffect(() => {
     confetti();
@@ -420,7 +471,7 @@ function Administracion() {
                   <button
                     className="col-12 btn text-white rounded-4 "
                     style={{ background: "#4d3147 " }}
-                    onClick={(e) => {
+                    onClick={() => {
                       navigate("/auth/alumnos");
                     }}
                   >
@@ -563,10 +614,13 @@ function Administracion() {
       )}
 
       {/* Modal para cambiar la contraseña de un administrador normal*/}
-      {actPassModalAdmComun && (
+      {showPass && (
         <ActualizarContraseña
-          showPass={showPass}
-          handleClosePass={handleClosePass}
+          onCloseModal={handleClosePass} // cambiado
+          onShowModal={showPass} // cambiado
+          onChangeAdminData={handleChangePasswordData} // cambiado
+          onSubmit={handleUpdatePasswordAdmin}
+          adminData={commonPass}
         />
       )}
 

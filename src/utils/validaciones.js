@@ -79,3 +79,7 @@ export const verificarDatos = (nombre, apellido, dni, celular, direccion) => {
 
   return errors;
 };
+
+export const equalsPassword  = (password, password2) => {
+  return password === password2;
+}

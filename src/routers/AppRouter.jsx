@@ -49,6 +49,7 @@ function AppRouter() {
           <>
           {/* tengo que pasar el /auth/* */}
             <Route path="/auth/" element={<AuthRouter />} /> 
+            <Route path="auth/alumnos" element={<AlumnosScreen />} />
             {/* <Route path="/auth/alumnos" element={<AlumnosScreen />} /> */}
           </>
         ) : (

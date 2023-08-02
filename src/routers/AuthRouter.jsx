@@ -17,7 +17,6 @@ function AuthRouter() {
       {jwt.token !== undefined ? (
         <>
           <Route path="/" element={<AdministracionScreen />} />
-          <Route path="/alumnos" element={<AlumnosScreen />} />
         </>
       ) : (
         <>

@@ -17,7 +17,7 @@ function CrearAlumno() {
 
   useEffect(() => {
     getAllAlumnos();
-  },[arrayAlumnos])
+  },[])
   // Estados para los formularios
   // -> Crear Alumno   
   // Formulario de Creación de alumno

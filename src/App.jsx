@@ -1,6 +1,7 @@
 import React from "react"
 import { BrowserRouter, Routes , Route } from "react-router-dom"
-import somosnosotros from "./pages/somosnosotros"
+import Home from "./pages/somosnosotros"
+import Footer from './components/Footer'
 
 function App() {
 
@@ -9,6 +10,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}/>
+         
+        
+          <Route path="*" element={<Error/>}/>
         </Routes>
       </BrowserRouter>
       <Footer/>

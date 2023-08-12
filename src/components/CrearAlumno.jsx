@@ -31,7 +31,7 @@ function CrearAlumno() {
 
   useEffect(() => {
     getAllAlumnos();
-  },[])
+  },[idAlumno])
 
   // Estados para los modales
   const [showModalSeguro, setShowModalSeguro] = useState(false);
@@ -285,7 +285,7 @@ function CrearAlumno() {
     }
   }
 
-  const handleAddYear = async () => {
+  const handleAddYear = async (id) => {
 
     const myHeaders = new Headers();
 
@@ -297,18 +297,20 @@ function CrearAlumno() {
       redirect: "follow",
     };
 
+    console.log(idAlumno)
     try {
       // preguntar a josé...
       const response = await fetch(
-        `http://localhost:8000/alumno/update-anioCursado-by-id/${idAlumno}`,
+        `http://localhost:8000/alumno/update-anioCursado-by-id/${id}`,
         requestOptions
       );
+        console.log("response:", response)
 
       if (response.status >= 400) {
         const errorBody = await response.json();
         throw new Error(errorBody.message);
       }
-
+      
       await getAllAlumnos();
     } catch (error) {
       if (error.message.length == 0 || error.status == 400) {
@@ -616,8 +618,8 @@ function CrearAlumno() {
                       </button>
                       <button className="btn rounded-2"
                       onClick={() => {
-                        setIdAlumno(alumno._id)
-                        handleAddYear()
+                        // setIdAlumno()
+                        handleAddYear(alumno._id)
                       }}>
                           <UilPlusCircle/>
                       </button>

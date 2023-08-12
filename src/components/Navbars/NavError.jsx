@@ -1,5 +1,6 @@
 import { UilHome } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router";
+import LogoImage from '../../assets/images/Logo.png';
 
 const NavError = () => {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ const NavError = () => {
               onClick={() => navigate("/")}
             >
               <img
-                src="../src/assets/Images/Logo.png"
+                src={LogoImage}
                 alt="Logo"
                 style={{ height: "100px", width: "150px" }}
               />

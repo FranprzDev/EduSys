@@ -13,10 +13,10 @@ import { UilUserPlus,
 import { Fade } from "react-awesome-reveal";
 import "../styles/globalStyle.css";
 import EstasSeguro from "./modals/EstasSeguro";
+import { useNavigate } from "react-router-dom";
 // Importo contextos
 import { ErrorContext } from "../context/ErrorContext";
 import { JwtContext } from "../context/JwtContext";
-import { useNavigate } from "react-router-dom";
 
 function CrearAlumno() {
   // Defino los contextos
@@ -529,20 +529,20 @@ function CrearAlumno() {
                 Actualizar el estado de la Cuota
               </h2>
               <form onSubmit={editarCuota} className="text-center">
-              <label htmlFor="" className="custom-violet-second-color mx-2">
-                    ¿Está al día de la Cuota?:
-                  </label>
-                  <select
-                    name="anio-cursado"
-                    defaultValue={alDia}
-                    onChange={(e) => {
-                      setAlDia(e.target.value);
-                    }}
-                    required
-                  >
-                    <option value="true">Si</option>
-                    <option value="false">No</option>
-                  </select>
+                <label htmlFor="" className="custom-violet-second-color mx-2">
+                  ¿Está al día de la Cuota?:
+                </label>
+                <select
+                  name="anio-cursado"
+                  defaultValue={alDia}
+                  onChange={(e) => {
+                    setAlDia(e.target.value);
+                  }}
+                  required
+                >
+                  <option value="true">Si</option>
+                  <option value="false">No</option>
+                </select>
 
                 <div className="text-center mt-3 my-2">
                   <button
@@ -605,29 +605,43 @@ function CrearAlumno() {
                       >
                         <UilTrashAlt />
                       </button>
-                      <button className="btn rounded-2"
-                      onClick={() => {
-                        setIdAlumno(alumno._id)
-                        handleShowFormCuota()
-                        }}>
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          setIdAlumno(alumno._id);
+                          handleShowFormCuota();
+                        }}
+                      >
                         {alumno.alDia ? (
                           <UilMoneyBill color="#20B926" />
                         ) : (
                           <UilMoneyBill color="#FF0000" />
                         )}
                       </button>
-                      <button className="btn rounded-2"
-                      onClick={() => {
-                        // setIdAlumno()
-                        handleAddYear(alumno._id)
-                      }}>
-                          <UilPlusCircle/>
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          handleAddYear(alumno._id);
+                        }}
+                      >
+                        <UilPlusCircle />
                       </button>
-                      <button 
-                      className="btn rounded-2"
-                      onClick={() => {
-                        navigate("/alumno/notas-cursado", { state: { idAlumno: alumno._id } });
-                      }}>
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          navigate(
+                            `notas-cursado/${alumno.nombre}-${alumno.apellido}-${alumno.anioCursado}`,
+                            {
+                              state: {
+                                idAlumno: alumno._id,
+                                nombre: alumno.nombre,
+                                apellido: alumno.apellido,
+                                anioCursado: alumno.anioCursado,
+                              },
+                            }
+                          );
+                        }}
+                      >
                         <UilNotes />
                       </button>
                     </div>
@@ -669,18 +683,48 @@ function CrearAlumno() {
                       >
                         <UilEdit />
                       </button>
-                      <button className="btn rounded-2">
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          setShowModalSeguro(true);
+                          setIdAlumno(alumno._id);
+                        }}
+                      >
                         <UilTrashAlt />
                       </button>
-                      <button className="btn rounded-2">
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          setIdAlumno(alumno._id);
+                          handleShowFormCuota();
+                        }}
+                      >
                         {alumno.alDia ? (
                           <UilMoneyBill color="#20B926" />
                         ) : (
                           <UilMoneyBill color="#FF0000" />
                         )}
                       </button>
-                      <button className="btn rounded-2">
-                        <UilCardAtm />
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          handleAddYear(alumno._id);
+                        }}
+                      >
+                        <UilPlusCircle />
+                      </button>
+                      <button
+                        className="btn rounded-2"
+                        onClick={() => {
+                          navigate(
+                            `/auth/alumnos/notas-cursado/${alumno._id}`,
+                            {
+                              state: { idAlumno: alumno._id },
+                            }
+                          );
+                        }}
+                      >
+                        <UilNotes />
                       </button>
                     </div>
                   </div>

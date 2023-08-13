@@ -1,8 +1,6 @@
-import PopoverInfo from "../popovers/PopoverInfo";
-import PopoverCuenta from "../popovers/PopoverCuenta";
-import PopoverSalir from "../popovers/PopoverSalir";
 import LogoImage from "../../assets/images/Logo.png";
 import { useNavigate } from "react-router-dom";
+import { PopoverCuenta, PopoverInfo, PopoverSalir } from "../Popovers";
 
 const NavBarAdministracion = () => {
   const navigate = useNavigate()

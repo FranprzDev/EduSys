@@ -13,6 +13,7 @@ import AlumnosScreen from '../pages/AlumnosScreen';
 import DatosIncorrectos from '../components/modals/DatosIncorrectos';
 import { ErrorContext } from '../context/ErrorContext';
 import AuthRouter from './AuthRouter';
+import NotasAlumno from '../pages/NotasAlumno';
 
 
 function AppRouter() {
@@ -27,12 +28,9 @@ function AppRouter() {
       // Proceso de decodificación del token
       const payloadBase64 = storedToken.split('.')[1];
       const payload = JSON.parse(atob(payloadBase64));
-      const decodedToken = payload.iat; 
 
-      const tokenExpiration = decodedToken * 10000;
       const currentTime = Date.now();
-
-      if (tokenExpiration > currentTime) {
+      if (payload.exp * 1000 > currentTime) {
         if (!location.pathname.startsWith('/auth/')) {
           navigate('/auth/');
         }
@@ -49,8 +47,8 @@ function AppRouter() {
           <>
           {/* tengo que pasar el /auth/* */}
             <Route path="/auth/" element={<AuthRouter />} /> 
-            <Route path="auth/alumnos" element={<AlumnosScreen />} />
-            {/* <Route path="/auth/alumnos" element={<AlumnosScreen />} /> */}
+            <Route path="/auth/alumnos/" element={<AlumnosScreen />} />
+            <Route path="/auth/alumnos/notas-cursado/*" element={<NotasAlumno />} />
           </>
         ) : (
           <Route path="/auth/*" element={<NotFoundScreen mensajeError="¡Se produjo un error en el acceso a la Aplicación!" />} />

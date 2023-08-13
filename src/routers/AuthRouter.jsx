@@ -16,7 +16,7 @@ function AuthRouter() {
       {/* AuthAdmin y AuthAlumnos */}
       {jwt.token !== undefined ? (
         <>
-          <Route path="/" element={<AdministracionScreen />} />
+          <Route path="/*" element={<AdministracionScreen />} />
         </>
       ) : (
         <>

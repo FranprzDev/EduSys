@@ -26,6 +26,7 @@ import EditarAdministrador from "./modals/EditarAdministrador";
 import jwtDecode from "jwt-decode";
 import { ErrorContext } from "../context/ErrorContext";
 import CrearAdmin from "./modals/CrearAdmin";
+import { API_URL } from "../utils/constants";
 
 function Administracion() {
   // Necesarios para moverme & lógica de CRUD
@@ -114,11 +115,10 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    // console.log(adminData)
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
+        `${API_URL}admin/update-camp-by-id/${adminData.adminId}`,
         requestOptions
       );
 
@@ -127,13 +127,11 @@ function Administracion() {
         throw new Error("Hubo un problema al actualizar los datos");
       }
 
-      console.log(result.message);
       if (result.message === "Se encontro el administrador.") {
         onCloseEditarAdmin();
         getAllAdmins();
       }
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
     }
   };
@@ -151,7 +149,6 @@ function Administracion() {
     setShowEditarCommonAdmin(false)
   }
 
-  // console.log(jwt)
   // Establezco los id correspondientes
 
   const [commonAdminData, setCommonAdminData] = useState({
@@ -197,12 +194,10 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    // console.log(commonAdminData)
-    // console.log(raw)
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/update-common-by-id/${commonAdminData.adminId}`,
+        `${API_URL}admin/update-common-by-id/${commonAdminData.adminId}`,
         requestOptions
       );
 
@@ -214,9 +209,7 @@ function Administracion() {
       onCloseEditarCommonAdmin();
       destroySession()
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
-
     }
   }
   // fin de la lógica para editar el administrador común
@@ -244,13 +237,10 @@ function Administracion() {
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    console.log("valores: ", commonPass)
     const raw = JSON.stringify({
       pass: commonPass.pass,
       retryPass: commonPass.retryPass
     });
-
-    console.log("raw: ", raw)
 
     const requestOptions = {
       method: "PUT",
@@ -261,7 +251,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/update-password/${commonPass.adminID}`,
+        `${API_URL}admin/update-password/${commonPass.adminID}`,
         requestOptions
       );
 
@@ -276,7 +266,6 @@ function Administracion() {
       navigate("/login")
     }
     catch (error) {
-      console.log("error", error);  // los borro o no?
       openErrorModal(error.message)
     }
   }
@@ -314,14 +303,14 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/admin/findall",
+        `${API_URL}admin/findall`,
         requestOptions
       );
       const result = await response.text();
       const array = JSON.parse(result).admin;
       setArrayAdmin(array);
     } catch (error) {
-      console.log("error", error);
+      openErrorModal(error.message)
     }
   };
 
@@ -353,15 +342,18 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/delete-by-id/${idTentativo}`,
+        `${API_URL}admin/delete-by-id/${idTentativo}`,
         requestOptions
       );
       const result = await response.text();
-      // console.log(result);
-      await getAllAdmins();
+      
+      // if(!result.ok){
+      //   navigate("/auth/administracion")
+      // }
+
       handleCloseEstas();
+      await getAllAdmins();
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
     }
   };
@@ -385,7 +377,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/admin/create",
+        `${API_URL}admin/create`,
         requestOptions
       );
 
@@ -518,7 +510,7 @@ function Administracion() {
                       </tr>
                     </thead>
                     <tbody className="table-group-divider text-center">
-                      {arrayAdmin.map((admin, index) => (
+                      {arrayAdmin?.map((admin, index) => (
                         <TablaAdmin
                           key={index}
                           mongoID={admin._id}
@@ -541,7 +533,7 @@ function Administracion() {
                   <section>
                     <div className="container">
                       <div className="row justify-content-center">
-                        {arrayAdmin.map((admin, index) => (
+                        {arrayAdmin?.map((admin, index) => (
                           <TablaCardAdmin
                             key={index}
                             mongoID={admin._id}

@@ -6,14 +6,6 @@ import { UilExclamationTriangle, UilTimes } from "@iconscout/react-unicons";
 import AngryRabbit from "../../assets/images/angry-rabbit.jpg";
 
 function DatosIncorrectos() {
-  const defaultText = {
-    patterns: [
-      "8 caracteres",
-      "1 mayúscula",
-      "1 caracter especial",
-      "1 número",
-    ],
-  };
 
   const { message, closeErrorModal } = useContext(ErrorContext) 
   return (

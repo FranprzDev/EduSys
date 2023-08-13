@@ -10,6 +10,7 @@ import { verificarContrasenia, verificarMail } from "../utils/validaciones";
 /* -> Importaciones para mejorar la UI */
 import { UilArrowRight } from "@iconscout/react-unicons";
 import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
+import { API_URL } from "../utils/constants";
 import { ErrorContext } from "../context/ErrorContext";
 
 function LoginPage() {
@@ -71,7 +72,7 @@ function LoginPage() {
     };
   
     try {
-      const response = await fetch("http://localhost:8000/auth/login", requestOptions);
+      const response = await fetch(`${API_URL}auth/login`, requestOptions);
 
       // console.log(response)
       if(response.status >= 400){

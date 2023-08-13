@@ -9,3 +9,6 @@ export const arrayMateriasPredefinidas = [
     'Historia',
     'Educación Física'
   ];
+
+// export const API_URL = "https://edusys-api.onrender.com/"
+export const API_URL = "http://localhost:8000/"

@@ -26,6 +26,7 @@ import EditarAdministrador from "./modals/EditarAdministrador";
 import jwtDecode from "jwt-decode";
 import { ErrorContext } from "../context/ErrorContext";
 import CrearAdmin from "./modals/CrearAdmin";
+import { API_URL } from "../utils/constants";
 
 function Administracion() {
   // Necesarios para moverme & lógica de CRUD
@@ -118,7 +119,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin//update-camp-by-id/${adminData.adminId}`,
+        `${API_URL}admin/update-camp-by-id/${adminData.adminId}`,
         requestOptions
       );
 
@@ -202,7 +203,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/update-common-by-id/${commonAdminData.adminId}`,
+        `${API_URL}admin/update-common-by-id/${commonAdminData.adminId}`,
         requestOptions
       );
 
@@ -261,7 +262,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/update-password/${commonPass.adminID}`,
+        `${API_URL}admin/update-password/${commonPass.adminID}`,
         requestOptions
       );
 
@@ -314,7 +315,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/admin/findall",
+        `${API_URL}admin/findall`,
         requestOptions
       );
       const result = await response.text();
@@ -353,13 +354,17 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/admin/delete-by-id/${idTentativo}`,
+        `${API_URL}admin/delete-by-id/${idTentativo}`,
         requestOptions
       );
       const result = await response.text();
-      // console.log(result);
-      await getAllAdmins();
+      
+      if(!result.ok){
+        navigate("/auth/administracion")
+      }
+
       handleCloseEstas();
+      await getAllAdmins();
     } catch (error) {
       console.log("error", error);
       openErrorModal(error.message)
@@ -385,7 +390,7 @@ function Administracion() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/admin/create",
+        `${API_URL}admin/create`,
         requestOptions
       );
 
@@ -518,7 +523,7 @@ function Administracion() {
                       </tr>
                     </thead>
                     <tbody className="table-group-divider text-center">
-                      {arrayAdmin.map((admin, index) => (
+                      {arrayAdmin?.map((admin, index) => (
                         <TablaAdmin
                           key={index}
                           mongoID={admin._id}
@@ -541,7 +546,7 @@ function Administracion() {
                   <section>
                     <div className="container">
                       <div className="row justify-content-center">
-                        {arrayAdmin.map((admin, index) => (
+                        {arrayAdmin?.map((admin, index) => (
                           <TablaCardAdmin
                             key={index}
                             mongoID={admin._id}

@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 // Importo contextos
 import { ErrorContext } from "../context/ErrorContext";
 import { JwtContext } from "../context/JwtContext";
+import { API_URL } from "../utils/constants";
 
 function CrearAlumno() {
   // Defino los contextos
@@ -107,7 +108,7 @@ function CrearAlumno() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/alumno/crear",
+        `${API_URL}alumno/crear`,
         requestOptions
       );
 
@@ -144,7 +145,7 @@ function CrearAlumno() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/alumno/findall",
+        `${API_URL}alumno/findall`,
         requestOptions
       );
 
@@ -181,7 +182,7 @@ function CrearAlumno() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/alumno/update-datos-by-id/${idAlumno}`,
+        `${API_URL}alumno/update-datos-by-id/${idAlumno}`,
         requestOptions
       );
 
@@ -221,7 +222,7 @@ function CrearAlumno() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/alumno/delete-by-id/${idAlumno}`,
+        `${API_URL}alumno/delete-by-id/${idAlumno}`,
         requestOptions
       );
 
@@ -265,7 +266,7 @@ function CrearAlumno() {
     try {
 
       const response = await fetch(
-        `http://localhost:8000/alumno/update-alDia-by-id/${idAlumno}`,
+        `${API_URL}alumno/update-alDia-by-id/${idAlumno}`,
         requestOptions
       );
 
@@ -301,7 +302,7 @@ function CrearAlumno() {
     try {
       // preguntar a josé...
       const response = await fetch(
-        `http://localhost:8000/alumno/update-anioCursado-by-id/${id}`,
+        `${API_URL}alumno/update-anioCursado-by-id/${id}`,
         requestOptions
       );
         console.log("response:", response)
@@ -574,7 +575,7 @@ function CrearAlumno() {
               </tr>
             </thead>
             <tbody className="table-group-divider text-center">
-              {arrayAlumnos.map((alumno, index) => (
+              {arrayAlumnos?.map((alumno, index) => (
                 <tr key={index}>
                   <td className="text-break">{index + 1}</td>
                   <td className="text-break">{alumno.nombre}</td>
@@ -653,7 +654,7 @@ function CrearAlumno() {
         ) : (
           <div className="container">
             <div className="row justify-content-center">
-              {arrayAlumnos.map((alumno, index) => (
+              {arrayAlumnos?.map((alumno, index) => (
                 <div className="col-xs-12 col-lg-6 my-1" key={index}>
                   <div className="card">
                     <header className="card-header">
@@ -717,9 +718,14 @@ function CrearAlumno() {
                         className="btn rounded-2"
                         onClick={() => {
                           navigate(
-                            `/auth/alumnos/notas-cursado/${alumno._id}`,
+                            `notas-cursado/${alumno.nombre}-${alumno.apellido}-${alumno.anioCursado}`,
                             {
-                              state: { idAlumno: alumno._id },
+                              state: {
+                                idAlumno: alumno._id,
+                                nombre: alumno.nombre,
+                                apellido: alumno.apellido,
+                                anioCursado: alumno.anioCursado,
+                              },
                             }
                           );
                         }}

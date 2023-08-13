@@ -1,4 +1,4 @@
-import NavBarAdministracion from '../components/navbars/NavBarAdministracion'
+import NavBarAdministracion from '../components/Navbars/NavBarAdministracion'
 import CrearAlumno from '../components/CrearAlumno'
 
 function Alumnos() {

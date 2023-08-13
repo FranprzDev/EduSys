@@ -1,4 +1,4 @@
-import NavError from '../components/navbars/NavError'
+import NavError from '../components/Navbars/NavError'
 import conejo from "../assets/images/404-conejo.jpeg"
 
 function NotFound({ mensajeError = "" }) {

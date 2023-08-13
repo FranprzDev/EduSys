@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import "../styles/globalStyle.css";
 import { JackInTheBox } from "react-awesome-reveal";
-import NavBarAdministracion from "../components/navbars/NavBarAdministracion";
+import NavBarAdministracion from "../components/Navbars/NavBarAdministracion";
 import {   
     UilEdit,
     UilSave 

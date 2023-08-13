@@ -115,7 +115,6 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    // console.log(adminData)
 
     try {
       const response = await fetch(
@@ -128,13 +127,11 @@ function Administracion() {
         throw new Error("Hubo un problema al actualizar los datos");
       }
 
-      console.log(result.message);
       if (result.message === "Se encontro el administrador.") {
         onCloseEditarAdmin();
         getAllAdmins();
       }
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
     }
   };
@@ -152,7 +149,6 @@ function Administracion() {
     setShowEditarCommonAdmin(false)
   }
 
-  // console.log(jwt)
   // Establezco los id correspondientes
 
   const [commonAdminData, setCommonAdminData] = useState({
@@ -198,8 +194,6 @@ function Administracion() {
       body: raw,
       redirect: "follow",
     };
-    // console.log(commonAdminData)
-    // console.log(raw)
 
     try {
       const response = await fetch(
@@ -215,9 +209,7 @@ function Administracion() {
       onCloseEditarCommonAdmin();
       destroySession()
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
-
     }
   }
   // fin de la lógica para editar el administrador común
@@ -245,13 +237,10 @@ function Administracion() {
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
 
-    console.log("valores: ", commonPass)
     const raw = JSON.stringify({
       pass: commonPass.pass,
       retryPass: commonPass.retryPass
     });
-
-    console.log("raw: ", raw)
 
     const requestOptions = {
       method: "PUT",
@@ -277,7 +266,6 @@ function Administracion() {
       navigate("/login")
     }
     catch (error) {
-      console.log("error", error);  // los borro o no?
       openErrorModal(error.message)
     }
   }
@@ -322,7 +310,7 @@ function Administracion() {
       const array = JSON.parse(result).admin;
       setArrayAdmin(array);
     } catch (error) {
-      console.log("error", error);
+      openErrorModal(error.message)
     }
   };
 
@@ -359,14 +347,13 @@ function Administracion() {
       );
       const result = await response.text();
       
-      if(!result.ok){
-        navigate("/auth/administracion")
-      }
+      // if(!result.ok){
+      //   navigate("/auth/administracion")
+      // }
 
       handleCloseEstas();
       await getAllAdmins();
     } catch (error) {
-      console.log("error", error);
       openErrorModal(error.message)
     }
   };

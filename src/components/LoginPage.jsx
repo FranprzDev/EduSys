@@ -21,15 +21,6 @@ function LoginPage() {
   const [mail, setMail] = useState("");
   const [contrasenia, setContrasenia] = useState("");
 
-
-  // Lógica para los modales
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-
-  
-  // Estados para la el Modal de Error
-  const [errorMessage, setErrorMessage] = useState("");
-
   // Lógica para la válidación de Inputs
   const longMaximaInput = 40;
   const minLenghtPass = 8;
@@ -74,18 +65,14 @@ function LoginPage() {
     try {
       const response = await fetch(`${API_URL}auth/login`, requestOptions);
 
-      // console.log(response)
       if(response.status >= 400){
         const errorBody = await response.json(); // hay que hacer un await por que el response también viene en async!
-        // console.error('Error del servidor:', errorBody);
         throw new Error(errorBody.message);
       }
 
       const result = await response.json();
-      // console.log(result)
 
       const decodedToken = await jwtDecode(result.access_token);
-      console.log(decodedToken)
 
       setJwt({
         id: decodedToken.id,
@@ -105,10 +92,6 @@ function LoginPage() {
       }
     catch (error) {
       openErrorModal(error.message)
-      // setShow(true);
-
-      // setErrorMessage(error.message ?? "activamelopapá");
-
     }
   }
   
@@ -237,6 +220,7 @@ function LoginPage() {
                       className="form-check-input"
                       type="checkbox"
                       id="gridCheck1"
+                      required
                     />
                     <label className="form-check-label" htmlFor="gridCheck1">
                       Acepto los términos y condiciones

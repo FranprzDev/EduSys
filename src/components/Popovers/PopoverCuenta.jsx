@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
+// import React, { useEffect } from 'react'
 import { UilInfoCircle } from '@iconscout/react-unicons'
 
 function PopoverCuenta() {
   useEffect(() => {
-    // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
-    popoverTriggerList.map(function (popoverTriggerEl) {
-      return new window.bootstrap.Popover(popoverTriggerEl, {
-        container: 'body'
-      });
-    });
-  }, []);
+  //   // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
+  //   const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
+  //   popoverTriggerList.map(function (popoverTriggerEl) {
+  //     return new window.bootstrap.Popover(popoverTriggerEl, {
+  //       container: 'body'
+  //     });
+  //   });
+  // }, []);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import JwtContext from "../../context/JwtContext";
 
 import { UilTimesCircle } from '@iconscout/react-unicons'

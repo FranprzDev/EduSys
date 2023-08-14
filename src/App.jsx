@@ -4,16 +4,19 @@ import AppRouter from "./routers/AppRouter";
 import { BrowserRouter } from "react-router-dom";
 import { JwtProvider } from "./context/JwtContext";
 import { ErrorProvider } from "./context/ErrorContext";
+import { InstProvider } from "./context/InstitucionContext";
 
 function App() {
 
   return (
     <JwtProvider>
       <ErrorProvider>
-        <BrowserRouter>
-          <AppRouter />
-          <Footer />
-        </BrowserRouter>
+        <InstProvider>
+          <BrowserRouter>
+            <AppRouter />
+            <Footer />
+          </BrowserRouter>
+        </InstProvider>
       </ErrorProvider>
     </JwtProvider>
   );

@@ -28,7 +28,9 @@ function InicioHome() {
                 </div>
                 <div className="col-lg-6 mx-auto">
                     <div>
-                        <h1 className='text-center' id="lineaHorizontal" style={{ color: "#866a80" }}>EduSys</h1>                   
+                        <article id="lineaHorizontal">
+                            <h1 className='text-center fs-1'>EduSys</h1>                   
+                        </article>
                         <p className='text-center col-6 mx-auto my-5'>Un lugar donde gestionar la información de tus estudiantes es mas fácil que nunca.</p>
                     <div className='text-center mt-3'>
                         <button className='col-md-4 btn text-white rounded-4 ' onClick={() => {navigate("/login")}} style={{ background: "#4d3147 " }}>Empezar <UilArrowRight/></button>

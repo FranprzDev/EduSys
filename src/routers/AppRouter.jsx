@@ -14,38 +14,39 @@ import DatosIncorrectos from '../components/modals/DatosIncorrectos';
 import { ErrorContext } from '../context/ErrorContext';
 import AuthRouter from './AuthRouter';
 import NotasAlumno from '../pages/NotasAlumno';
+import { InstContext } from '../context/InstitucionContext';
+import CrearInst from '../components/modals/CrearInst';
+import Redireccionar from '../components/Redireccionar';
 
 
 function AppRouter() {
   const { jwt } = useContext(JwtContext);
   const { showModalError } = useContext(ErrorContext)
+  const { showModalInst, openInstModal } = useContext(InstContext)
   const navigate = useNavigate();
 
-  // Verificar si ya hay un token en el almacenamiento local
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
+  
     if (storedToken) {
-      // Proceso de decodificación del token
-      const payloadBase64 = storedToken.split('.')[1];
-      const payload = JSON.parse(atob(payloadBase64));
-
-      const currentTime = Date.now();
-      if (payload.exp * 1000 > currentTime) {
-        if (!location.pathname.startsWith('/auth/')) {
-          navigate('/auth/');
-        }
-      }
+      navigate('/auth/');
     }
-  }, [navigate]);
+  }, []);
+
+  useEffect(() => {
+    if (showModalInst) {
+      openInstModal();
+    }
+  }, [showModalInst]);
 
   return (
     <>
+    {/* <Redireccionar/> */}
       <Routes>
         <Route path="/" element={<HomeScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         {jwt.token !== undefined ? (
           <>
-          {/* tengo que pasar el /auth/* */}
             <Route path="/auth/" element={<AuthRouter />} /> 
             <Route path="/auth/alumnos/" element={<AlumnosScreen />} />
             <Route path="/auth/alumnos/notas-cursado/*" element={<NotasAlumno />} />
@@ -59,6 +60,12 @@ function AppRouter() {
         showModalError && (
           <DatosIncorrectos/>
         ) 
+      }
+
+      {
+        showModalInst && (
+          <CrearInst/>
+        )
       }
     </>
   )

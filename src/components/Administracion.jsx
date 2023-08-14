@@ -29,18 +29,11 @@ import CrearAdmin from "./modals/CrearAdmin";
 import { API_URL } from "../utils/constants";
 
 function Administracion() {
+
   // Necesarios para moverme & lógica de CRUD
   const { jwt, destroySession } = useContext(JwtContext);
   const { openErrorModal } = useContext(ErrorContext)
   const navigate = useNavigate();
-
-  // Manejo del Adminsitrador Común
-
-  const [actDatosModalAdmComun, setactDatosModalAdmComun] = useState(false);
-  const actualizarDatosAdminModalOpen = () => { setactDatosModalAdmComun(true) }
-  const actualizarDatosAdminModalClose = () => { setactDatosModalAdmComun(false) }
-
-  // Fin del manejo de modales de admin
 
   // -> Lógica para los modales & Recursos visuales <-
   const [show, setShow] = useState(false);

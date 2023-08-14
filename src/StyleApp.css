@@ -49,3 +49,26 @@
     margin-bottom: 10px;
   }
   
+  /* ... otros estilos ... */
+
+.rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .rating span {
+    margin-right: 10px;
+  }
+  
+  .rating svg {
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
+  }
+  
+  .rating svg.active {
+    color: #f7d032;
+  }
+  ul {
+    list-style-type: none; }

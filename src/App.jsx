@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Formulario de Comentarios</h1>
+      <h1>Dejá tu comentario</h1>
       <CommentForm addComment={addComment} />
       <CommentList comments={comments} setComments={setComments} />
     </div>

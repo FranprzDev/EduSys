@@ -1,21 +1,21 @@
-/* -> Importaciones */
-import Footer from "./components/Footer";
-import AppRouter from "./routers/AppRouter";
-import { BrowserRouter } from "react-router-dom";
-import { JwtProvider } from "./context/JwtContext";
-import { ErrorProvider } from "./context/ErrorContext";
+import React, { useState } from 'react';
+import CommentForm from './pages/CommentForms';
+import CommentList from './pages/CommentList';
+import './StyleApp.css';
 
 function App() {
+  const [comments, setComments] = useState([]);
+
+  const addComment = (comment) => {
+    setComments([...comments, { ...comment, isHighlighted: false }]);
+  };
 
   return (
-    <JwtProvider>
-      <ErrorProvider>
-        <BrowserRouter>
-          <AppRouter />
-          <Footer />
-        </BrowserRouter>
-      </ErrorProvider>
-    </JwtProvider>
+    <div className="App">
+      <h1>Formulario de Comentarios</h1>
+      <CommentForm addComment={addComment} />
+      <CommentList comments={comments} setComments={setComments} />
+    </div>
   );
 }
 

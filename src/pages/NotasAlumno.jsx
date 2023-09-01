@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "../styles/globalStyle.css";
-import { JackInTheBox } from "react-awesome-reveal";
+import { Fade, JackInTheBox } from "react-awesome-reveal";
 import NavBarAdministracion from "../components/Navbars/NavBarAdministracion";
-import {   
-    UilEdit,
-    UilSave 
-} from "@iconscout/react-unicons";
+import { UilEdit, UilSave, UilTrashAlt } from "@iconscout/react-unicons";
 import { API_URL } from "../utils/constants";
 // Importo contextos
 import { ErrorContext } from "../context/ErrorContext";
-
+import { JwtContext } from "../context/JwtContext";
+let arrayPromedio = [];
 
 function NotasAlumno() {
   const { openErrorModal } = useContext(ErrorContext);
+  const { jwt } = useContext(JwtContext);
   const location = useLocation();
   const { nombre, apellido, anioCursado = 0, idAlumno } = location.state;
 
@@ -21,15 +20,29 @@ function NotasAlumno() {
 
   const [arrayMaterias, setArrayMaterias] = useState([]);
 
-    // Estados para mi Notas
-    const [editNota, setEditNota] = useState(0);
-    const [editingNote, setEditingNote] = useState(null);
-    const [promedioNotas, setPromedioNotas] = useState(new Array(anioCursado).fill(0));
+  // Estados para mi Notas
+  const [editNota, setEditNota] = useState(0);
+  const [editingNote, setEditingNote] = useState(null);
+  const [promedioNotas, setPromedioNotas] = useState(
+    new Array(anioCursado).fill(0)
+  );
 
-    const getNotasByYear = async (anio = 0) => {
+  // const [arrayPromedio, setArrayPromedio] = useState([]);
+
+  const getNotasByYear = async (anio = 0) => {
     try {
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+      myHeaders.append("Content-Type", "application/json");
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      };
       const response = await fetch(
-        `${API_URL}notas/alumno/${idAlumno}`
+        `${API_URL}notas/alumno/${idAlumno}`,
+        requestOptions
       );
 
       if (!response.ok) {
@@ -41,7 +54,7 @@ function NotasAlumno() {
       }
       const data = await response.json();
       // setArrayMaterias(prev => [...prev, ...data.notasFiltradas])
-      setArrayMaterias(data.notasFiltradas)
+      setArrayMaterias(data.notasFiltradas);
     } catch (error) {
       openErrorModal(error.message);
     }
@@ -49,89 +62,99 @@ function NotasAlumno() {
 
   const handleEditMateria = async (anioMateria, nota, idMateria) => {
     const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
-    
+
     const raw = JSON.stringify({
-      "idAlumno": idAlumno,
-      "idMateria": idMateria,
-      "anio": anioMateria,
-      "nota": nota
+      idAlumno: idAlumno,
+      idMateria: idMateria,
+      anio: anioMateria,
+      nota: nota,
     });
-    
+
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: raw,
-      redirect: 'follow'
+      redirect: "follow",
     };
 
     try {
       const response = await fetch(
-        `${API_URL}notas/editar-nota`, requestOptions
+        `${API_URL}notas/editar-nota`,
+        requestOptions
       );
 
       if (!response.ok) {
         if (response.status == 404) {
-          throw new Error("Hubo un problema grave, contacta a un administrador");
+          throw new Error(
+            "Hubo un problema grave, contacta a un administrador"
+          );
         }
 
         throw new Error("Error al actualizar las notas");
       }
-      
-      await getNotasByYear(anioMateria)
+
+      await getNotasByYear(anioMateria);
       await handleCalcular(anioMateria);
-      setEditingNote(null)
-      setEditNota(0)
+      setEditingNote(null);
+      setEditNota(0);
     } catch (error) {
       openErrorModal(error.message);
     }
-  }
+  };
 
   const calcularPromedio = async (anioACalcular) => {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
 
-        const requestOptions = {
-          method: "GET",
-          headers: myHeaders,
-          redirect: "follow",
-        };
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
 
-        try {
-          const response = await fetch(
-            `${API_URL}notas/calcular-promedio-anio/${anioACalcular}/${idAlumno}`,
-            requestOptions
+    try {
+      const response = await fetch(
+        `${API_URL}notas/calcular-promedio-anio/${anioACalcular}/${idAlumno}`,
+        requestOptions
+      );
+
+      if (!response.ok) {
+        if (response.status == 404) {
+          throw new Error(
+            "Hubo un problema grave, contacta a un administrador"
           );
-
-          if (!response.ok) {
-            if (response.status == 404) {
-              throw new Error(
-                "Hubo un problema grave, contacta a un administrador"
-              );
-            }
-
-            throw new Error("Error al consultar el promedio, no hay notas.");
-          }
-
-          const data = await response.json();
-          const updatedPromedioNotas = [...promedioNotas];
-          updatedPromedioNotas[anioACalcular - 1] = data.promedio === null ? 0 : parseFloat(data.promedio.toFixed(2));
-          setPromedioNotas(updatedPromedioNotas);
-        } catch (error) {
-          openErrorModal(error.message);
         }
-  }
+
+        throw new Error("Error al consultar el promedio, no hay notas.");
+      }
+
+      const data = await response.json();
+      // data.promedio me trae el promedio desde el backend.
+      // Este promedio es acorde al año y a las materias, este está bien.
+      // Ahora tnego que guardarlo de alguna manera.
+      // Si pongo el promedio en la posición específica al anioCalcular
+
+      arrayPromedio[anioACalcular - 1] = data.promedio;
+
+      setPromedioNotas(arrayPromedio);
+    } catch (error) {
+      openErrorModal(error.message);
+    }
+  };
 
   const handleCalcular = async (anioACalcular) => {
-    for(let i = 1; i <= anioACalcular; i++){
-      await calcularPromedio(i)
+    for (let i = 1; i <= anioACalcular; i++) {
+      await calcularPromedio(i);
     }
-  }
+  };
 
   useEffect(() => {
-    getNotasByYear()
-    handleCalcular(anioCursado)
-  }, [])
+    getNotasByYear();
+    handleCalcular(anioCursado);
+  }, []);
 
   return (
     <>
@@ -159,20 +182,13 @@ function NotasAlumno() {
                 </span>
                 <>Promedio General: </>
                 <span className="custom-violet-third-color">
-                  {
-                    (promedioNotas.reduce(
+                  {(
+                    promedioNotas.reduce(
                       (acc, nota) => acc + parseFloat(nota),
                       0
-                    ) / anioCursado).toFixed(2)
-                  }
+                    ) / anioCursado
+                  ).toFixed(2)}
                 </span>
-                <div className="text-center custom-violet-first-color">
-                  <button className="btn btn-outline btn-3 rounded-3 my-2"
-                    onClick={() => {handleCalcular(anioCursado)}}
-                  >
-                    Actualizar Promedio
-                  </button>
-                </div>
               </>
             </section>
           </h3>
@@ -194,9 +210,7 @@ function NotasAlumno() {
                     </span>{" "}
                     Materias{" "}
                     <span className="bold">
-                      [PROMEDIO{" "}
-                      {promedioNotas[index]}
-                      ]
+                      [PROMEDIO {promedioNotas[index]?.toFixed(2)}]
                     </span>
                   </span>
                 </th>
@@ -251,46 +265,57 @@ function NotasAlumno() {
                       {editingNote &&
                         editingNote.idNota === materia.idNota &&
                         editingNote.anio === materia.anio && (
-                          // <Fade>
-                          <>
-                            <form
-                              className="d-flex justify-content-center align-items-center w-100 h-100"
-                              onSubmit={(e) => {
-                                e.preventDefault(); // Evitar el envío del formulario por defecto
-                                handleEditMateria(
-                                  index + 1,
-                                  editNota,
-                                  materia.idMateria
-                                );
-                              }}
-                            >
-                              <input
-                                type="number"
-                                className="form-control rounded-4 w-50 mx-2 text-center"
-                                placeholder="Nota"
-                                value={editNota}
-                                onChange={(e) => setEditNota(e.target.value)}
-                                minLength={1}
-                                maxLength={2}
-                                max={10}
-                                min={1}
-                                style={{
-                                  background: "#c9b7c7",
-                                  boxShadow: "inset 0 2px 3px #4d3147",
+                          <Fade>
+                            <>
+                              <form
+                                className="d-flex justify-content-center align-items-center w-100 h-100"
+                                onSubmit={(e) => {
+                                  e.preventDefault(); // Evitar el envío del formulario por defecto
+                                  handleEditMateria(
+                                    index + 1,
+                                    editNota,
+                                    materia.idMateria
+                                  );
                                 }}
-                                required
-                              />
-
-                              <button
-                                type="submit" // Cambia el tipo de botón para que funcione como botón de envío
-                                className="btn text-white rounded-4 w-50"
-                                style={{ background: "#4d3147 " }}
                               >
-                                Guardar <UilSave />
-                              </button>
-                            </form>
-                          </>
-                          // {/* </Fade> */}
+                                <input
+                                  type="number"
+                                  className="form-control rounded-4 w-75 mx-2 text-center"
+                                  placeholder="Nota"
+                                  value={editNota}
+                                  onChange={(e) => setEditNota(e.target.value)}
+                                  minLength={1}
+                                  maxLength={2}
+                                  max={10}
+                                  min={1}
+                                  style={{
+                                    background: "#c9b7c7",
+                                    boxShadow: "inset 0 2px 3px #4d3147",
+                                  }}
+                                  required
+                                />
+
+                                <button
+                                className="btn text-white rounded-4 w-25 mx-2"
+                                style={{ background: "#4d3147 " }}
+                                  onClick={() => {
+                                    setEditingNote(null);
+                                    setEditNota(0);
+                                  }}
+                                >
+                                  <UilTrashAlt/>
+                                </button>
+                                <button
+                                  type="submit" // Cambia el tipo de botón para que funcione como botón de envío
+                                  className="btn text-white rounded-4 w-50"
+                                  style={{ background: "#4d3147 " }}
+                                >
+                                  <UilSave />
+                                </button>
+
+                              </form>
+                            </>
+                          </Fade>
                         )}
                     </td>
                   </tr>

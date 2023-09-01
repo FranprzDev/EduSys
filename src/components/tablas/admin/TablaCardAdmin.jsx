@@ -3,9 +3,10 @@ import {
   UilEdit,
   UilTrashAlt,
   UilCardAtm,
+  UilExclamationTriangle,
 } from "@iconscout/react-unicons";
 import { useRef, useState } from "react";
-import '../../../styles/globalStyle.css'
+import "../../../styles/globalStyle.css";
 import Tooltip from "../../tooltip";
 
 const TablaCard = ({
@@ -17,11 +18,11 @@ const TablaCard = ({
   dni = undefined,
   celular = undefined,
   mail = undefined,
-  onDelete = () => { },
-  onUpdate = () => { },
+  onDelete = () => {},
+  onUpdate = () => {},
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const buttonRef = useRef(null)
+  const buttonRef = useRef(null);
 
   return (
     <div className="col-xs-12 col-lg-6 my-1">
@@ -45,25 +46,35 @@ const TablaCard = ({
           </ul>
         </div>
         <div className="text-center d-flex justify-content-around">
+          {!(dni == 40000000) ? (
+            <>
+              <button
+                className="btn rounded-2"
+                onClick={() => {
+                  onUpdate(mongoID, nombre, apellido, dni);
+                }}
+              >
+                <UilEdit />
+              </button>
+              <button
+                className="btn rounded-2"
+                onClick={() => {
+                  onDelete(mongoID);
+                }}
+              >
+                <UilTrashAlt />
+              </button>
+            </>
+          ) : (
+            <UilExclamationTriangle color="#e9b000" />
+          )}
           <button
             className="btn rounded-2"
+            ref={buttonRef}
             onClick={() => {
-              onUpdate(mongoID, nombre, apellido, dni);
+              setShowTooltip(!showTooltip);
             }}
           >
-            <UilEdit />
-          </button>
-          <button
-            className="btn rounded-2"
-            onClick={() => {
-              onDelete(mongoID);
-            }}
-          >
-            <UilTrashAlt />
-          </button>
-          <button className="btn rounded-2"
-          ref={buttonRef}
-          onClick={() => {setShowTooltip(!showTooltip)}}>
             <UilCardAtm />
           </button>
           <Tooltip

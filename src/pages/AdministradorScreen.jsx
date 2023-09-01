@@ -6,7 +6,7 @@ import { InstContext } from "../context/InstitucionContext";
 
 
 function Administrador() {
-  const { nombreInst, mailInst, celularInst, openInstModal, showModalInst } = useContext(InstContext);
+  const { nombreInst, mailInst, celularInst, openInstModal } = useContext(InstContext);
 
   useEffect(() => {
     // Verificar si no hay datos en la institución

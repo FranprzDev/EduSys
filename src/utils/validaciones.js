@@ -8,16 +8,13 @@ export const verificarMail = (mail) => {
 
   const isValidEmail = emailRegex.test(mail);
   const isCorrectLength = longitudRegex.test(mail);
-  const newErrors = [];
+  let error = 0;
 
-  if (!isValidEmail) {
-    newErrors.push("El correo electrónico no es válido.");
-  }
-  if (!isCorrectLength) {
-    newErrors.push("Sólo puedes ingresar hasta 40 caracteres.");
+  if (!isValidEmail || !isCorrectLength) {
+    error = 1 
   }
 
-  return newErrors;
+  return error;
 };
 
 export const verificarContrasenia = (contrasenia) => {
@@ -30,22 +27,13 @@ export const verificarContrasenia = (contrasenia) => {
   const cumpleNumero = numeroRegex.test(contrasenia);
   const cumpleCaracterEspecial = caracterEspecialRegex.test(contrasenia);
   const cumpleLongitud = longitudRegex.test(contrasenia);
-  const newErrors = [];
+  let error = 0
 
-  if (!cumpleMayuscula) {
-    newErrors.push("La contraseña debe contener al menos 1 letra mayúscula.");
-  }
-  if (!cumpleNumero) {
-    newErrors.push("La contraseña debe contener al menos 1 número.");
-  }
-  if (!cumpleCaracterEspecial) {
-    newErrors.push("La contraseña debe contener al menos 1 carácter especial.");
-  }
-  if (!cumpleLongitud) {
-    newErrors.push(`La cantidad mínima de caracteres es ${minLenghtPass}.`);
+  if (!cumpleMayuscula || !cumpleNumero || !cumpleCaracterEspecial || !cumpleLongitud) {
+    error = 1
   }
 
-  return newErrors;
+  return error;
 };
 
 export const verificarDatos = (nombre, apellido, dni, celular, direccion) => {

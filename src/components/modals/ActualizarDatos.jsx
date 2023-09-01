@@ -1,15 +1,17 @@
-import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import { UilDatabase, UilTimes, UilUpload } from "@iconscout/react-unicons";
+import { useContext } from "react";
+import { JwtContext } from "../../context/JwtContext";
 
 function ActualizarDatos({
   onCloseModal = () => undefined,
   onSubmit = () => undefined,
-  adminCommonData = { celular: '', mail: '', direccion: '' },
+  adminCommonData = { celular: '', mail: '', direccion: '' }, // Lo dejamos por el momento a este
   onChangeAdminData = (prop, value) => undefined,
 }) {
 
+  const { jwt } = useContext(JwtContext);
   return (
     <>
       <div className="modal" style={{ display: "block" }} tabIndex="-1">
@@ -28,7 +30,7 @@ function ActualizarDatos({
                     minLength={7}
                     maxLength={8}
                     min={0}
-                    defaultValue={adminCommonData.celular}
+                    defaultValue={jwt.celular}
                     placeholder="Ingrese un nuevo celular"
                     name="celular"
                     onChange={({ target: { value, name } }) => onChangeAdminData(name, value)}
@@ -45,7 +47,7 @@ function ActualizarDatos({
                     minLength={3}
                     maxLength={40}
                     name="mail"
-                    defaultValue={adminCommonData.email}
+                    defaultValue={jwt.email}
                     onChange={({ target: { value, name } }) => onChangeAdminData(name, value)}
                     style={{
                       background: "#c9b7c7",
@@ -60,7 +62,7 @@ function ActualizarDatos({
                     minLength={6}
                     maxLength={70}
                     name="direccion"
-                    defaultValue={adminCommonData.direccion}
+                    defaultValue={jwt.direccion}
                     onChange={({ target: { value, name } }) => onChangeAdminData(name, value)}
                     style={{
                       background: "#c9b7c7",

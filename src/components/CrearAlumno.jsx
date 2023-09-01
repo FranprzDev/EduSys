@@ -138,8 +138,13 @@ function CrearAlumno() {
   // Obtener todos los Alumnos
 
   const getAllAlumnos = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
+
     const requestOptions = {
       method: "GET",
+      headers: myHeaders,
       redirect: "follow",
     };
 
@@ -251,7 +256,6 @@ function CrearAlumno() {
     const myHeaders = new Headers();
 
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
-
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify(alumno);
@@ -289,8 +293,8 @@ function CrearAlumno() {
   const handleAddYear = async (id) => {
 
     const myHeaders = new Headers();
-
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
       method: "PUT",
@@ -568,7 +572,6 @@ function CrearAlumno() {
                 <th scope="col">#</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
-                {/* <th scope="col">Contraseña</th> */}
                 <th scope="col">Año de Cursado</th>
                 <th scope="col">Cuota al día</th>
                 <th scope="col">Opciones</th>

@@ -2,8 +2,6 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JwtContext from "../context/JwtContext";
-import jwtDecode from "jwt-decode";
-
 // Importar funciones lógicas
 import { verificarContrasenia, verificarMail } from "../utils/validaciones";
 
@@ -12,9 +10,10 @@ import { UilArrowRight } from "@iconscout/react-unicons";
 import girl from "../assets/images/girl-cute-iniciar-sesion.jpg";
 import { API_URL } from "../utils/constants";
 import { ErrorContext } from "../context/ErrorContext";
+import jwtDecode from "jwt-decode";
 
 function LoginPage() {
-  const { setJwt } = useContext(JwtContext);
+  const { jwt, setJwt } = useContext(JwtContext);
   const { openErrorModal } = useContext(ErrorContext);
   const navigate = useNavigate();
 
@@ -24,49 +23,33 @@ function LoginPage() {
   // Lógica para la válidación de Inputs
   const longMaximaInput = 40;
   const minLenghtPass = 8;
-  const [arrayError, setArrayError] = useState([])
-  const [arrayErrorMail, setArrayErrorMail] = useState([])
-
-  // Estos use-effects hacen que se rendericen los errores en tiempo real.
-  useEffect(() => {
-    const errors = verificarContrasenia(contrasenia);
-
-    if (contrasenia.length >= longMaximaInput) {
-      errors.push(`La contraseña debe tener como máximo ${longMaximaInput} caracteres.`);
-    }
-
-    setArrayError(errors);
-  }, [contrasenia]);
-
-  useEffect(() => {
-    const errors = verificarMail(mail);
-    setArrayErrorMail(errors);
-  }, [mail]);
-  
-  // Logica para el boton
-  const disableSubmit = arrayError.length !== 0 || arrayErrorMail.length !== 0;
+  const [error, setError] = useState(true);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
-  
+
     const raw = JSON.stringify({
-      "mail": mail,
-      "contrasenia": contrasenia
+      mail: mail,
+      contrasenia: contrasenia,
     });
-  
+
+
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: raw,
+      redirect: 'follow'
     };
-  
+
     try {
       const response = await fetch(`${API_URL}auth/login`, requestOptions);
 
-      if(response.status >= 400){
-        const errorBody = await response.json(); // hay que hacer un await por que el response también viene en async!
+
+      if (response.status >= 400) {
+        const errorBody = await response.json();
         throw new Error(errorBody.message);
       }
 
@@ -88,44 +71,49 @@ function LoginPage() {
 
       localStorage.setItem("token", result.access_token);
 
-      navigate("/auth/")
-      }
-    catch (error) {
-      openErrorModal(error.message)
+      navigate("/auth/");
+    } catch (error) {
+      openErrorModal(error.message);
     }
-  }
-  
+  };
+
   // -> Lógica de Checkeo de tener el JWT para estar logeado.
-  useEffect(() => {
-    // Verificar si ya hay un token en el almacenamiento local
-    const storedToken = localStorage.getItem("token");
+  // useEffect(() => {
+  //   // Verificar si ya hay un token en el almacenamiento local
+  //   const storedToken = localStorage.getItem("token");
 
-    if (storedToken) {
-      // Decodificar el token para obtener información relevante
-      const decodedToken = jwtDecode(storedToken);
+  //   if (storedToken) {
+  //     // Decodificar el token para obtener información relevante
+  //     const decodedToken = jwtDecode(storedToken);
 
-      // Verificar si el token es válido y no ha expirado
-      const tokenExpiration = decodedToken.exp * 1000; // Convertir la fecha de expiración del token a milisegundos
-      const currentTime = Date.now();
+  //     // Verificar si el token es válido y no ha expirado
+  //     const tokenExpiration = decodedToken.exp * 1000; // Convertir la fecha de expiración del token a milisegundos
+  //     const currentTime = Date.now();
 
-      if (tokenExpiration > currentTime) {
-        // El token es válido y no ha expirado, por lo tanto, el usuario ya está autenticado
-        setJwt({
-          mail: decodedToken.mail,
-          token: storedToken,
-          // agregar mas datos después
-        });
+  //     if (tokenExpiration > currentTime) {
+  //       // // El token es válido y no ha expirado, por lo tanto, el usuario ya está autenticado
+  //       // setJwt({
+  //       //   id: decodedToken.id,
+  //       //   nombre: decodedToken.nombre,
+  //       //   apellido: decodedToken.apellido,
+  //       //   direccion: decodedToken.direccion,
+  //       //   dni: decodedToken.dni,
+  //       //   celular: decodedToken.celular,
+  //       //   email: decodedToken.mail,
+  //       //   token: storedToken,
+  //       // });
 
-        // Redirigir a la página de administración
-        navigate("/auth/");
-      }
-    }
-  }, [setJwt, navigate]);
+  //       // Redirigir a la página de administración
+  //       console.log("------------->")
+  //       navigate("/auth/");
+  //     }
+  //   }
+  // }, [setJwt, navigate]);
 
   return (
     <>
-      <div className="container ">
-        <div className="row justify-content-end">
+      <div className="flex-container h-100">
+        <div className="row justify-content-center">
           <div className="col-sm-5">
             <figure
               className="w-65 h-100 rounded-circle mx-auto overflow-hidden"
@@ -147,8 +135,8 @@ function LoginPage() {
               />
             </figure>
           </div>
-          <div className="col-md-6">
-            <div className="form">
+          <div className="col-md-6 d-flex align-items-center w-50 justify-content-center">
+            <div className="form w-100">
               <h2
                 className=" text-center"
                 style={{
@@ -173,20 +161,23 @@ function LoginPage() {
                       required
                       value={mail}
                       onChange={(e) => {
+                        
+                        if (
+                          verificarMail(mail)
+                        ) {
+                          setError(false);
+                        } else {
+                          setError(true);
+                        }
                         setMail(e.target.value);
                       }}
                       maxLength={longMaximaInput}
                       style={{
                         background: "#c9b7c7",
                         boxShadow: "inset 0 2px 3px #4d3147",
-                        border: mail.length === longMaximaInput ? "2px solid red" : undefined,
+                        border: !error ? "2px solid red" : "none",
                       }}
                     />
-                    {arrayErrorMail.map((error, index) => (
-                      <p key={index} className="text-danger">
-                        {error}
-                      </p>
-                    ))}
                   </div>
                   <div className="mb-3 mx-3">
                     <label htmlFor="password" className="label-custom">
@@ -204,27 +195,21 @@ function LoginPage() {
                       style={{
                         background: "#c9b7c7",
                         boxShadow: "inset 0 2px 3px #4d3147",
-                        border: arrayError.length !== 0 ? "2px solid red" : undefined
+                        border: !error ? "2px solid red" : "none",
                       }}
                       value={contrasenia}
-                      onChange={(e) => setContrasenia(e.target.value)}
+                      onChange={(e) => {
+                        
+                        if (
+                          verificarContrasenia(contrasenia)
+                        ) {
+                          setError(false);
+                        } else {
+                          setError(true);
+                        }
+                        setContrasenia(e.target.value);
+                      }}
                     />
-                    {arrayError.map((error, index) => (
-                      <p key={index} className="text-danger">
-                        {error}
-                      </p>
-                    ))}
-                  </div>
-                  <div className="form-check justify-content-center">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="gridCheck1"
-                      required
-                    />
-                    <label className="form-check-label" htmlFor="gridCheck1">
-                      Acepto los términos y condiciones
-                    </label>
                   </div>
                   <div className="text-center">
                     <button
@@ -232,7 +217,7 @@ function LoginPage() {
                       type="submit"
                       id="submit-button"
                       style={{ background: "#4d3147 " }}
-                      disabled={disableSubmit}
+                      disabled={!error}
                     >
                       Iniciar Sesión
                       <UilArrowRight size="30" color="#C9B7C7" />

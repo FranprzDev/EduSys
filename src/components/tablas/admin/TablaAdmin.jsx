@@ -1,4 +1,4 @@
-import { UilEdit, UilTrashAlt } from "@iconscout/react-unicons";
+import { UilEdit, UilTrashAlt, UilExclamationTriangle  } from "@iconscout/react-unicons";
 
 function TablaAdmin({
   mongoID = undefined,
@@ -18,12 +18,12 @@ function TablaAdmin({
       <td className="text-break">{mongoID}</td>
       <td className="text-break">{nombre}</td>
       <td className="text-break">{apellido}</td>
-      {/* <td className="text-break">{contrasenia}</td> */}
       <td className="text-break">{direccion}</td>
       <td className="text-break">{dni}</td>
       <td className="text-break">{celular}</td>
       <td className="text-break">{mail}</td>
       <td className="text-break">
+        { !(dni == 40000000) ? (
         <div className="text-center d-flex justify-content-around">
           <button
             className="btn rounded-2"
@@ -37,11 +37,13 @@ function TablaAdmin({
             onClick={() => {
               onDelete(mongoID);
             }}
-            // me gustaria que no se pueda eliminar el superAdministrador.
           >
             <UilTrashAlt />
           </button>
         </div>
+        ) : (
+          <UilExclamationTriangle color="#e9b000"/>
+        )}
       </td>
     </tr>
   );

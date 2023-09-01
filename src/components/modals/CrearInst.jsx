@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { JwtContext } from "../../context/JwtContext";
 import { InstContext } from "../../context/InstitucionContext";
 import { UilUpload } from "@iconscout/react-unicons";
@@ -9,8 +9,6 @@ import { useNavigate } from "react-router-dom";
 const CrearInst = () => {
   const { nombreInst, celularInst, mailInst, handleCreateInstitution } =
     useContext(InstContext);
-
-
 
   const [nombreTentativo, setNombreTentativo] = useState("");
   const [celularTentativo, setCelularTentativo] = useState("");

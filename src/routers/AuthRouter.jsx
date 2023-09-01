@@ -7,6 +7,7 @@ import { JwtContext } from "../context/JwtContext";
 import AdministracionScreen from "../pages/AdministradorScreen";
 import AlumnosScreen from "../pages/AlumnosScreen";
 import NotFoundScreen from "../pages/NotFoundScreen";
+import NotasAlumno from "../pages/NotasAlumno";
 
 function AuthRouter() {
   const { jwt } = useContext(JwtContext);
@@ -17,6 +18,8 @@ function AuthRouter() {
       {jwt.token !== undefined ? (
         <>
           <Route path="/*" element={<AdministracionScreen />} />
+          <Route path="/alumnos/" element={<AlumnosScreen />} />
+          <Route path="/alumnos/notas-cursado/*" element={<NotasAlumno />} />
         </>
       ) : (
         <>

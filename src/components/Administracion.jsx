@@ -23,7 +23,6 @@ import TablaCardAdmin from "./tablas/admin/TablaCardAdmin";
 import TablaAdmin from "./tablas/admin/TablaAdmin";
 import EstasSeguro from "./modals/EstasSeguro";
 import EditarAdministrador from "./modals/EditarAdministrador";
-import jwtDecode from "jwt-decode";
 import { ErrorContext } from "../context/ErrorContext";
 import CrearAdmin from "./modals/CrearAdmin";
 import { API_URL } from "../utils/constants";
@@ -31,13 +30,12 @@ import { API_URL } from "../utils/constants";
 function Administracion() {
 
   // Necesarios para moverme & lógica de CRUD
-  const { jwt, destroySession } = useContext(JwtContext);
+  const { jwt, destroySession, setJwt } = useContext(JwtContext);
   const { openErrorModal } = useContext(ErrorContext)
   const navigate = useNavigate();
 
   // -> Lógica para los modales & Recursos visuales <-
   const [show, setShow] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [idTentativo, setIdTentativo] = useState("");
 
   const handleClose = () => setShow(false);
@@ -174,7 +172,7 @@ function Administracion() {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
-
+    
     const raw = JSON.stringify({
       celular: commonAdminData.celular,
       direccion: commonAdminData.direccion,
@@ -182,29 +180,32 @@ function Administracion() {
     });
 
     const requestOptions = {
-      method: "PUT",
+      method: 'PUT',
       headers: myHeaders,
       body: raw,
-      redirect: "follow",
+      redirect: 'follow'
     };
 
     try {
-      const response = await fetch(
-        `${API_URL}admin/update-common-by-id/${commonAdminData.adminId}`,
-        requestOptions
-      );
 
+      const response = await fetch(`${API_URL}admin/update-common-by-id/${commonAdminData.adminId}`, requestOptions)
       const result = await response.json();
+
       if (!response.ok) {
-        throw new Error("Hubo un problema al actualizar los datos");
+        throw new Error(result.mensaje);
       }
+    
+      // ESTE CÓDIGO ES EXACTAMENTE EL MISMO QUE EL DEL RECUPERAR CONTRASEÑA
+      // PERO AQUÍ NO FUNCIONA, NO ENTIENDO LA RAZÓN.
 
       onCloseEditarCommonAdmin();
       destroySession()
+      navigate("/login")
     } catch (error) {
       openErrorModal(error.message)
     }
   }
+
   // fin de la lógica para editar el administrador común
   // inicio de la lógica para el admin data
 
@@ -263,34 +264,25 @@ function Administracion() {
     }
   }
 
-  useEffect(() => {
-    confetti();
-    // modal de iniciaste sesion como {TIPO-DE-ADMIN}
-  }, []);
-
   // --> Lógica de mostrar bien la tabla
   const [anchoPantalla, setAnchoPantalla] = useState(window.innerWidth);
   const handleResize = () => {
     setAnchoPantalla(window.innerWidth);
   };
 
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
   // Lógica para el ocultar tabla & petición al servidor <--
-
-  // ReactHooks
   const [showTable, setShowTable] = useState(false);
   const [arrayAdmin, setArrayAdmin] = useState([]);
 
   // Funciones
   const getAllAdmins = async () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${jwt.token}`);
+    myHeaders.append("Content-Type", "application/json");
+
     const requestOptions = {
       method: "GET",
+      headers: myHeaders,
       redirect: "follow",
     };
 
@@ -306,10 +298,6 @@ function Administracion() {
       openErrorModal(error.message)
     }
   };
-
-  useEffect(() => {
-    getAllAdmins();
-  }, []);
 
   const handleTable = () => {
     setShowTable(!showTable);
@@ -338,11 +326,6 @@ function Administracion() {
         `${API_URL}admin/delete-by-id/${idTentativo}`,
         requestOptions
       );
-      const result = await response.text();
-      
-      // if(!result.ok){
-      //   navigate("/auth/administracion")
-      // }
 
       handleCloseEstas();
       await getAllAdmins();
@@ -379,13 +362,24 @@ function Administracion() {
         throw new Error(errorBody.message);
       }
 
-      const result = await response.text();
       await getAllAdmins();
       handleClose()
     } catch (error) {
       openErrorModal(error.message)
     }
   };
+
+  useEffect(() => {
+    confetti();
+    jwt.mail === "admin@gmail.com" && getAllAdmins();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <>
@@ -441,7 +435,22 @@ function Administracion() {
                 <div className="col-md-6 col-lg-8 mx-auto">
                   <button
                     className="col-12 btn text-white rounded-4 "
-                    onClick={() => { setShowEditarCommonAdmin(true) }}
+                    onClick={() => { 
+                      openErrorModal("Actualmente esta opción se cuenta inhabilitada por problemas técnicos, se recomienda leer los comentarios de esta sección.")
+
+                      /*
+                        ¿Por qué se encuentra deshabilitada esta sección?
+
+                        Debido a problemas que escapan a mi conocimiento actual, está sección se encuentra deshabilitada temporalmente hasta
+                        inclusive la entrega del proyecto.
+                        Debido a que utiliza mucho algunos hooks de react como son el "useEffect" y el "useContext" incluyendo modales, esto se me escapó de las manos
+                        así haciendo que no tenga idea como pueda arreglar este error.
+                        Al parecer el error se realiza ya que se actualiza de algún modo que desconozco al usar este modal, y no puedo prevenir la actualización
+                        de ninguna forma, cosa que no sucede en el de actualizar contraseña del administrador común.
+                        
+                      */
+                      // setShowEditarCommonAdmin(true) -> Con esto se puede actualizar la contraseña. 
+                    }}
                     style={{ background: "#4d3147 " }}
                   >
                     Actualizar Datos <UilCog />
@@ -494,7 +503,6 @@ function Administracion() {
                         <th scope="col">MongoID</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
-                        {/* <th scope="col">Contraseña</th> */}
                         <th scope="col">Direccion</th>
                         <th scope="col">DNI</th>
                         <th scope="col">Celular</th>
@@ -509,7 +517,6 @@ function Administracion() {
                           mongoID={admin._id}
                           nombre={admin.nombre}
                           apellido={admin.apellido}
-                          // contrasenia={admin.contrasenia}
                           direccion={admin.direccion}
                           dni={admin.dni}
                           celular={admin.celular}
@@ -532,7 +539,6 @@ function Administracion() {
                             mongoID={admin._id}
                             nombre={admin.nombre}
                             apellido={admin.apellido}
-                            // contrasenia={admin.contrasenia}
                             direccion={admin.direccion}
                             dni={admin.dni}
                             celular={admin.celular}
@@ -590,9 +596,9 @@ function Administracion() {
       {/* Modal para actualizar los datos de un administrador normal*/}
       {showEditarCommonAdmin && (
         <ActualizarDatos
-          onCloseModal={onCloseEditarCommonAdmin} // cambiado
-          onShowModal={handleOpenUpdateAdminCommon} // cambiado
-          onChangeAdminData={handleChangeUpdateAdminCommonValues} // cambiado
+          onCloseModal={onCloseEditarCommonAdmin}
+          onShowModal={handleOpenUpdateAdminCommon} 
+          onChangeAdminData={handleChangeUpdateAdminCommonValues}
           onSubmit={handleUpdateCommonAdmin}
           adminData={commonAdminData}
         />
@@ -601,9 +607,9 @@ function Administracion() {
       {/* Modal para cambiar la contraseña de un administrador normal*/}
       {showPass && (
         <ActualizarContraseña
-          onCloseModal={handleClosePass} // cambiado
-          onShowModal={showPass} // cambiado
-          onChangeAdminData={handleChangePasswordData} // cambiado
+          onCloseModal={handleClosePass}
+          onShowModal={showPass}
+          onChangeAdminData={handleChangePasswordData} 
           onSubmit={handleUpdatePasswordAdmin}
           adminData={commonPass}
         />

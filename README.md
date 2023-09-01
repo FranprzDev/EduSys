@@ -21,3 +21,10 @@ Tiene la aplicación de la Metodología SCRUM para la creación del proyecto, a 
 **BackEnd:** Express, Node.js
 
 **Base de Datos:** MongoDB (Base de Dato No-Relacional)
+
+
+## Documentación
+
+[Documentación](https://docs.google.com/document/d/1d_1glJH4jTwK9lF3XUYO0b0_dUwaT7aPAOFgnvmg-EE/edit?usp=sharing)
+
+

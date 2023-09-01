@@ -32,7 +32,7 @@ const InstProvider = ({ children }) => {
 
   const fetchDataFromBackend = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/inst/get-inst`);
+      const response = await fetch(`${API_URL}inst/get-inst`);
       const data = await response.json();
 
       setNombreInst(data.institucion[0].nombreInst);
@@ -67,7 +67,7 @@ const InstProvider = ({ children }) => {
       redirect: "follow",
     };
     try {
-      const response = await fetch(`http://localhost:8000/inst/create-inst`, requestOptions);
+      const response = await fetch(`${API_URL}inst/create-inst`, requestOptions);
       const result = await response.json();
 
       setNombreInst(result.nombreInst);

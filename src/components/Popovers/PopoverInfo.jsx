@@ -4,15 +4,15 @@ import { InstContext } from '../../context/InstitucionContext';
 
 function PopoverInfo() {
   const { nombreInst, mailInst, celularInst } = useContext(InstContext);
-  useEffect(() => {
-    // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
-    popoverTriggerList.map(function (popoverTriggerEl) {
-      return new window.bootstrap.Popover(popoverTriggerEl, {
-        container: 'body'
-      });
-    });
-  }, []);
+  // useEffect(() => {
+  //   // Activa los popovers en los elementos con clase 'popoverAdmin' al montar el componente
+  //   const popoverTriggerList = [].slice.call(document.querySelectorAll('.popoverAdmin'));
+  //   popoverTriggerList.map(function (popoverTriggerEl) {
+  //     return new window.bootstrap.Popover(popoverTriggerEl, {
+  //       container: 'body'
+  //     });
+  //   });
+  // }, []);
 
   return (
     <button className='btn btn-outline text-gray popoverAdmin' 

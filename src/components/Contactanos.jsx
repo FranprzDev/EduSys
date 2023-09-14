@@ -43,6 +43,7 @@ function Contactanos() {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 maxLength={40}
+                pattern="[a-zA-Z]"
                 style={{
                   background: "#c9b7c7",
                   boxShadow: "inset 0 2px 3px #4d3147",
@@ -53,6 +54,7 @@ function Contactanos() {
                 type="email"
                 className="form-control rounded-4 my-3"
                 placeholder="Email"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                 maxLength={40}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -68,6 +70,7 @@ function Contactanos() {
                 className="form-control rounded-4 h-100"
                 placeholder="Escribe un mensaje"
                 value={mensaje}
+                maxLength={200}
                 onChange={(e) => setMensaje(e.target.value)}
                 style={{
                   background: "#c9b7c7 ",
@@ -81,7 +84,6 @@ function Contactanos() {
               <button
                 className="col-4 btn text-white rounded-4 "
                 style={{ background: "#4d3147 " }}
-                // onClick={handleShow}
               >
                 Enviar <UilArrowRight />
               </button>

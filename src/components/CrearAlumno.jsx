@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { ErrorContext } from "../context/ErrorContext";
 import { JwtContext } from "../context/JwtContext";
 import { API_URL } from "../utils/constants";
+import { esLetra, esNumero } from "../utils/validaciones";
 
 function CrearAlumno() {
   // Defino los contextos
@@ -380,8 +381,13 @@ function CrearAlumno() {
                     type="text"
                     className="form-control rounded-4 "
                     placeholder="Nombre"
+                    
                     value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value == " " || esLetra(e.target.value)){
+                        setNombre(e.target.value)
+                      }
+                    }}
                     minLength={3}
                     maxLength={25}
                     style={{
@@ -397,7 +403,11 @@ function CrearAlumno() {
                     className="form-control rounded-4 "
                     placeholder="Apellido"
                     value={apellido}
-                    onChange={(e) => setApellido(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value == " " || esLetra(e.target.value)){
+                        setApellido(e.target.value)
+                      }
+                    }}
                     minLength={3}
                     maxLength={25}
                     style={{
@@ -409,11 +419,15 @@ function CrearAlumno() {
                 </div>
                 <div className="col-md-8 mx-auto my-2">
                   <input
-                    type="text"
+                    type="number"
                     className="form-control rounded-4 "
                     placeholder="DNI"
                     value={dni}
-                    onChange={(e) => setDni(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value == " " || esNumero(e.target.value)){
+                        setDni(e.target.value)
+                      }
+                      }}
                     minLength={7}
                     maxLength={8}
                     style={{
@@ -485,7 +499,11 @@ function CrearAlumno() {
                     className="form-control rounded-4 "
                     placeholder="Nombre"
                     value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value == " " || esLetra(e.target.value)){
+                        setNombre(e.target.value)
+                      }
+                    }}
                     minLength={3}
                     maxLength={25}
                     style={{
@@ -501,7 +519,11 @@ function CrearAlumno() {
                     className="form-control rounded-4 "
                     placeholder="Apellido"
                     value={apellido}
-                    onChange={(e) => setApellido(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value == " " || esLetra(e.target.value)){
+                        setApellido(e.target.value)
+                      } 
+                    }}
                     minLength={3}
                     maxLength={25}
                     style={{

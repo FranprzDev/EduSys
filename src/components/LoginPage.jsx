@@ -113,7 +113,7 @@ function LoginPage() {
   return (
     <>
       <div className="flex-container h-100">
-        <div className="row justify-content-center">
+        <div className="row justify-content-center gx-0">
           <div className="col-sm-5">
             <figure
               className="w-65 h-100 rounded-circle mx-auto overflow-hidden"

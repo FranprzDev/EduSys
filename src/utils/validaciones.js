@@ -71,3 +71,27 @@ export const verificarDatos = (nombre, apellido, dni, celular, direccion) => {
 export const equalsPassword  = (password, password2) => {
   return password === password2;
 }
+
+export const esLetra = (input) => {
+  const alphabetRegex = /^[a-zA-Z]+$/;
+  
+  return alphabetRegex.test(input);
+}
+
+export const esNumero = (input) => {
+  const numberRegex = /^[0-9]+$/;
+  
+  return numberRegex.test(input);
+}
+
+export const esMail = (input) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  return emailRegex.test(input);
+}
+
+export const esAlfanumerico = (input) => {
+  const alphanumericRegex = /^[a-zA-Z0-9]+$/;
+  
+  return alphanumericRegex.test(input);
+}

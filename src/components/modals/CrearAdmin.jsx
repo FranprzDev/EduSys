@@ -6,6 +6,8 @@ import {
   verificarContrasenia,
   verificarDatos,
   verificarMail,
+  esLetra,
+  esNumero,
 } from "../../utils/validaciones";
 
 function CrearAdmin({
@@ -23,70 +25,16 @@ function CrearAdmin({
   const [direccion, setDireccion] = useState("");
   const [contrasenia, setContrasenia] = useState("");
 
-  const [arrayErrors, setArrayErrors] = useState([]);  
-
-  // useEffect(() => {
-  //   const errores = [];
-  //   const erroresMail = verificarMail(mail);
-  //   let erroresContrasenia = ''
-  //   if(message === "Crear Administrador"){
-  //     erroresContrasenia = verificarContrasenia(contrasenia);
-  //   }
-  //   const erroresDatos = verificarDatos(
-  //     message === "Crear Administrador" ? nombre : "pase",
-  //     message === "Crear Administrador" ? apellido : "pase",
-  //     message === "Crear Administrador" ? dni : "pase",
-  //     celular,
-  //     direccion
-  //   );
-
-  //   if (erroresMail) errores.push(erroresMail);
-  //   if (erroresContrasenia) errores.push(erroresContrasenia);
-  //   if (erroresDatos) errores.push(erroresDatos);
-
-  //   setArrayErrors(errores);
-  // }, [contrasenia, mail, nombre, apellido, dni, celular, direccion]);
-
-  // useEffect(() => {
-
-  // }, [inputModified])
-
-  const areAllFieldsValid = () => {
-    // La función verificarMail, verificarContrasenia y verificarDatos ahora devuelven una matriz vacía si todo es válido
-    const erroresMail = verificarMail(mail);
-    const erroresContrasenia = message === "Crear Administrador" ? verificarContrasenia(contrasenia) : [];
-    const erroresDatos = verificarDatos(
-      message === "Crear Administrador" ? nombre : "pase",
-      message === "Crear Administrador" ? apellido : "pase",
-      message === "Crear Administrador" ? dni : "pase",
-      celular,
-      direccion
-    );
-  
-    const errors = [];
-    errors.push(erroresMail)
-    errors.push(erroresContrasenia)
-    errors.push(erroresDatos)
-    // Comprobar si hay algún error en los campos
-    return (
-      erroresMail.length === 0 &&
-      erroresContrasenia.length === 0 &&
-      erroresDatos.length === 0
-    );
-  };
-
   const handleSubmit = (e) => {
-    if (arrayErrors.length === 0) {
-      admin = {
-        nombre,
-        apellido,
-        dni,
-        celular,
-        mail,
-        direccion,
-        contrasenia,
-      };
-    }
+    admin = {
+      nombre,
+      apellido,
+      dni,
+      celular,
+      mail,
+      direccion,
+      contrasenia,
+    };
 
     e.preventDefault();
     setNombre("");
@@ -120,10 +68,17 @@ function CrearAdmin({
                         className="form-control rounded-4 "
                         placeholder="Nombre"
                         value={nombre}
+                        pattern="[a-zA-Z]+"
+                        title="Solo se permiten letras (mayúsculas y minúsculas)"
                         minLength={3}
                         maxLength={25}
                         onChange={(e) => {
-                          setNombre(e.target.value);
+                          if (
+                            e.target.value === "" ||
+                            esLetra(e.target.value)
+                          ) {
+                            setNombre(e.target.value);
+                          }
                         }}
                         style={{
                           background: "#c9b7c7",
@@ -140,11 +95,15 @@ function CrearAdmin({
                       type="text"
                       className="form-control rounded-4 my-3"
                       placeholder="Apellido"
+                      pattern="[a-zA-Z]+"
+                      title="Solo se permiten letras (mayúsculas y minúsculas)"
                       value={apellido}
                       minLength={3}
                       maxLength={25}
                       onChange={(e) => {
-                        setApellido(e.target.value);
+                        if (e.target.value === "" || esLetra(e.target.value)) {
+                          setApellido(e.target.value);
+                        }
                       }}
                       style={{
                         background: "#c9b7c7",
@@ -155,24 +114,24 @@ function CrearAdmin({
                   ) : (
                     <></>
                   )}
-                  {message === "Crear Administrador" ? (
-                    <input
-                      type="number"
-                      min="0"
-                      className="form-control rounded-4 my-3"
-                      placeholder="DNI"
-                      minLength={7}
-                      maxLength={8}
-                      value={dni}
-                      onChange={(e) => {
-                        setDni(e.target.value);
-                      }}
-                      style={{
-                        background: "#c9b7c7",
-                        boxShadow: "inset 0 2px 3px #4d3147",
-                      }}
-                      required
-                    />
+                  {message === "Crear Administrador" ? (              
+                      <input
+                        type="number"
+                        min="0"
+                        className="form-control rounded-4 my-3"
+                        placeholder="DNI"
+                        minLength={7}
+                        maxLength={8}
+                        value={dni}
+                        onChange={(e) => {
+                          setDni(e.target.value);
+                        }}
+                        style={{
+                          background: "#c9b7c7",
+                          boxShadow: "inset 0 2px 3px #4d3147",
+                        }}
+                        required
+                      />
                   ) : (
                     <></>
                   )}
@@ -186,7 +145,9 @@ function CrearAdmin({
                     min={0}
                     value={celular}
                     onChange={(e) => {
-                      setCelular(e.target.value);
+                      if (e.target.value === "" || esNumero(e.target.value)) {
+                        setCelular(e.target.value);
+                      }
                     }}
                     style={{
                       background: "#c9b7c7",
@@ -227,40 +188,43 @@ function CrearAdmin({
                     required
                   />
                   {message == "Crear Administrador" ? (
-                    <input
-                      type="password"
-                      className="form-control rounded-4 my-3"
-                      placeholder="Contraseña"
-                      minLength={8}
-                      maxLength={40}
-                      value={contrasenia}
-                      onChange={(e) => {
-                        setContrasenia(e.target.value);
-                      }}
-                      style={{
-                        background: "#c9b7c7",
-                        boxShadow: "inset 0 2px 3px #4d3147",
-                      }}
-                      required
-                    />
+                    <>
+                      <input
+                        type="password"
+                        className="form-control rounded-4 my-3"
+                        placeholder="Contraseña"
+                        minLength={8}
+                        maxLength={40}
+                        value={contrasenia}
+                        onChange={(e) => {
+                          setContrasenia(e.target.value);
+                        }}
+                        style={{
+                          background: "#c9b7c7",
+                          boxShadow: "inset 0 2px 3px #4d3147",
+                        }}
+                        required
+                      />
+                                        <label htmlFor="contrasenia" className="text-danger mb-2 mt-0 pt-0"
+                        style={{
+                          fontSize: "17px",
+                          position: "relative",
+                          top: "-13px",
+                        }}
+                      >
+                        La contraseña debe tener como mínimo 8 caracteres,
+                        conteniendo 1 mayúscula, 1 minúscula, 1 número y 1
+                        carácter especial.
+                      </label>
+                    </>
                   ) : (
                     <></>
                   )}
-
-                  {/* Mostrar errores debajo del botón de enviar */}
-                  <div className="text-center">
-                    {arrayErrors.map((error, index) => (
-                      <div key={index} className="text-danger">
-                        <p>{error}</p>
-                      </div>
-                    ))}
-                  </div>
 
                   <button
                     type="submit"
                     className="btn text-white rounded-4"
                     style={{ background: "#4d3147 " }}
-                    disabled={!areAllFieldsValid()}
                   >
                     Guardar Cambios <UilUpload className="ms-2" />
                   </button>

@@ -48,8 +48,6 @@ function AppRouter() {
         {jwt.token !== undefined ? (
           <>
             <Route path="/auth//*" element={<AuthRouter />} /> 
-            {/* <Route path="/auth/alumnos/" element={<AlumnosScreen />} />
-            <Route path="/auth/alumnos/notas-cursado/*" element={<NotasAlumno />} /> */}
           </>
         ) : (
           <Route path="/auth/*" element={<NotFoundScreen mensajeError="¡Se produjo un error en el acceso a la Aplicación!" />} />

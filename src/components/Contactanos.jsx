@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import ContactanosModal from "./modals/ContactanosModal";
 import { UilArrowRight } from "@iconscout/react-unicons";
 import { useState } from "react";
-import { esAlfanumerico, esLetra } from "../utils/validaciones";
+import { validarLetrasEspacios } from "../utils/validaciones";
 
 
 function Contactanos() {
@@ -39,15 +39,16 @@ function Contactanos() {
             <div className="col-md-8 mx-auto">
               <input
                 type="text"
-                className="form-control rounded-4 "
+                className="form-control rounded-4"
                 placeholder="Nombre y Apellido"
                 value={nombre}
                 onChange={(e) => {
-                  if(e.target.value == "" || esLetra(e.target.value)){                  
+                  if(validarLetrasEspacios(e.target.value)){
                     setNombre(e.target.value)
-                  }}}
+                  }
+                }}
                 maxLength={40}
-                pattern="[a-zA-Z]"
+                pattern="^[a-zA-Z\s]*$"
                 style={{
                   background: "#c9b7c7",
                   boxShadow: "inset 0 2px 3px #4d3147",
@@ -76,10 +77,8 @@ function Contactanos() {
                 value={mensaje}
                 maxLength={200}
                 onChange={(e) => {
-                  if(e.target.value == "" || esAlfanumerico(e.target.value)){
-                    setMensaje(e.target.value)}
-                  } 
-                }
+                  setMensaje(e.target.value);
+                }}
                 style={{
                   background: "#c9b7c7 ",
                   boxShadow: "inset 0 2px 3px #4d3147",

@@ -85,13 +85,19 @@ export const esNumero = (input) => {
 }
 
 export const esMail = (input) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}$/;
   
   return emailRegex.test(input);
-}
+};
+
 
 export const esAlfanumerico = (input) => {
   const alphanumericRegex = /^[a-zA-Z0-9]+$/;
   
   return alphanumericRegex.test(input);
+}
+
+// Validas las letras y los espacios en blanco (nombres, apellidos)
+export function validarLetrasEspacios(inputValue) {
+  return /^[a-zA-Z\s]*$/.test(inputValue);
 }

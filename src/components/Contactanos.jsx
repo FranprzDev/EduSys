@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import ContactanosModal from "./modals/ContactanosModal";
 import { UilArrowRight } from "@iconscout/react-unicons";
 import { useState } from "react";
+import { esAlfanumerico, esLetra } from "../utils/validaciones";
 
 
 function Contactanos() {
@@ -41,7 +42,10 @@ function Contactanos() {
                 className="form-control rounded-4 "
                 placeholder="Nombre y Apellido"
                 value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                onChange={(e) => {
+                  if(e.target.value == "" || esLetra(e.target.value)){                  
+                    setNombre(e.target.value)
+                  }}}
                 maxLength={40}
                 pattern="[a-zA-Z]"
                 style={{
@@ -71,7 +75,11 @@ function Contactanos() {
                 placeholder="Escribe un mensaje"
                 value={mensaje}
                 maxLength={200}
-                onChange={(e) => setMensaje(e.target.value)}
+                onChange={(e) => {
+                  if(e.target.value == "" || esAlfanumerico(e.target.value)){
+                    setMensaje(e.target.value)}
+                  } 
+                }
                 style={{
                   background: "#c9b7c7 ",
                   boxShadow: "inset 0 2px 3px #4d3147",

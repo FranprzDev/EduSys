@@ -114,24 +114,24 @@ function CrearAdmin({
                   ) : (
                     <></>
                   )}
-                  {message === "Crear Administrador" ? (              
-                      <input
-                        type="number"
-                        min="0"
-                        className="form-control rounded-4 my-3"
-                        placeholder="DNI"
-                        minLength={7}
-                        maxLength={8}
-                        value={dni}
-                        onChange={(e) => {
-                          setDni(e.target.value);
-                        }}
-                        style={{
-                          background: "#c9b7c7",
-                          boxShadow: "inset 0 2px 3px #4d3147",
-                        }}
-                        required
-                      />
+                  {message === "Crear Administrador" ? (
+                    <input
+                      type="number"
+                      min="0"
+                      className="form-control rounded-4 my-3"
+                      placeholder="DNI"
+                      minLength={7}
+                      maxLength={8}
+                      value={dni}
+                      onChange={(e) => {
+                        setDni(e.target.value);
+                      }}
+                      style={{
+                        background: "#c9b7c7",
+                        boxShadow: "inset 0 2px 3px #4d3147",
+                      }}
+                      required
+                    />
                   ) : (
                     <></>
                   )}
@@ -205,7 +205,20 @@ function CrearAdmin({
                         }}
                         required
                       />
-                                        <label htmlFor="contrasenia" className="text-danger mb-2 mt-0 pt-0"
+                      <label
+                        htmlFor="contrasenia"
+                        className="text-danger mb-2 mt-0 pt-0"
+                        style={{
+                          fontSize: "17px",
+                          position: "relative",
+                          top: "-13px",
+                        }}
+                      >
+                        El ingreso del número ya se considera el prefijo (381)
+                      </label>
+                      <label
+                        htmlFor="contrasenia"
+                        className="text-danger mb-2 mt-0 pt-0"
                         style={{
                           fontSize: "17px",
                           position: "relative",

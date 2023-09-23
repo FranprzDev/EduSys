@@ -7,31 +7,28 @@ import { JwtContext } from '../context/JwtContext';
 // -> Páginas
 import HomeScreen from "../pages/HomeScreen";
 import LoginScreen from "../pages/LoginScreen";
-import AdministradorScreen from '../pages/AdministradorScreen';
 import NotFoundScreen from '../pages/NotFoundScreen';
-import AlumnosScreen from '../pages/AlumnosScreen';
 import DatosIncorrectos from '../components/modals/DatosIncorrectos';
 import { ErrorContext } from '../context/ErrorContext';
 import AuthRouter from './AuthRouter';
-import NotasAlumno from '../pages/NotasAlumno';
 import { InstContext } from '../context/InstitucionContext';
 import CrearInst from '../components/modals/CrearInst';
-import Redireccionar from '../components/Redireccionar';
 
 
 function AppRouter() {
   const { jwt } = useContext(JwtContext);
   const { showModalError } = useContext(ErrorContext)
   const { showModalInst, openInstModal } = useContext(InstContext)
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
+  // Código para que redireccionar a la página de autenticado.
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //   const storedToken = localStorage.getItem('token');
   
-    if (storedToken) {
-      navigate('/auth/');
-    }
-  }, []);
+  //   if (storedToken) {
+  //     navigate('/auth/');
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (showModalInst) {

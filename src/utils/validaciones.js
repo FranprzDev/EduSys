@@ -101,3 +101,19 @@ export const esAlfanumerico = (input) => {
 export function validarLetrasEspacios(inputValue) {
   return /^[a-zA-Z\s]*$/.test(inputValue);
 }
+
+export const validarDatos = (data) => {
+  // valido la información para crear administradores...
+  const errors = [];
+
+  errors.push(verificarDatos(data.nombre, data.apellido, data.dni, data.celular, data.direccion))
+  validarLetrasEspacios(data.nombre) ? null : errors.push("El nombre solo puede contener letras.");
+  validarLetrasEspacios(data.apellido) ? null : errors.push("El apellido solo puede contener letras.");
+  esNumero(data.dni) ? null : errors.push("El DNI solo puede contener números (Entre 7 y 8).");
+  esNumero(data.celular) ? null : errors.push("El número de celular solo puede contener números (Entre 7 y 8).");
+  esMail(data.mail) ? null : errors.push("El mail no es válido.");
+  verificarContrasenia(data.password) === 0 ? null : errors.push("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un caracter especial.");
+
+
+  return errors;
+}

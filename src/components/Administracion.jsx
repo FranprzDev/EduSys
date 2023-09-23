@@ -26,6 +26,7 @@ import EditarAdministrador from "./modals/EditarAdministrador";
 import { ErrorContext } from "../context/ErrorContext";
 import CrearAdmin from "./modals/CrearAdmin";
 import { API_URL } from "../utils/constants";
+import { validarDatos } from "../utils/validaciones";
 
 function Administracion() {
 
@@ -342,6 +343,8 @@ function Administracion() {
     myHeaders.append("Authorization", `Bearer ${jwt.token}`);
     myHeaders.append("Content-Type", "application/json");
 
+    let arrayError = validarDatos(data);
+
     const raw = JSON.stringify(data);
 
     const requestOptions = {
@@ -358,8 +361,7 @@ function Administracion() {
       );
 
       if(response.status >= 400){
-        const errorBody = await response.json(); // hay que hacer un await por que el response también viene en async!
-        throw new Error(errorBody.message);
+        throw new Error(arrayError.join(' '));
       }
 
       await getAllAdmins();
